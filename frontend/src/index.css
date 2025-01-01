@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a {
+  @apply relative; /* Ensure the element is positioned relative */
+}
+
+a::after {
+  content: "";
+  @apply absolute left-0 w-1 h-full bg-red-400 opacity-0 transition-opacity; /* Small box is hidden initially */
+  top: 50%;
+  transform: translateY(-50%); /* Adjust for perfect vertical alignment */
+}
+
+a:hover::after {
+  @apply opacity-100;
+}
+
+a:hover {
+  @apply text-red-400;
+}
+
+.active-element {
+  @apply text-red-400 relative; /* Same text color as hover */
+}
+
+.active-element::after {
+  content: "";
+  @apply absolute left-0 w-1 h-full bg-red-400 opacity-100; /* Small box visible permanently */
+  top: 50%;
+  transform: translateY(-50%); /* Align vertically */
+}
