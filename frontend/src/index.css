@@ -2,22 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-a {
+.menu-elements {
   @apply relative; /* Ensure the element is positioned relative */
 }
 
-a::after {
+.menu-elements::after {
   content: "";
   @apply absolute left-0 w-1 h-full bg-red-400 opacity-0 transition-opacity; /* Small box is hidden initially */
   top: 50%;
   transform: translateY(-50%); /* Adjust for perfect vertical alignment */
 }
 
-a:hover::after {
+.menu-elements:hover::after {
   @apply opacity-100;
 }
 
-a:hover {
+.menu-elements:hover {
   @apply text-red-400;
 }
 
@@ -30,4 +30,12 @@ a:hover {
   @apply absolute left-0 w-1 h-full bg-red-400 opacity-100; /* Small box visible permanently */
   top: 50%;
   transform: translateY(-50%); /* Align vertically */
+}
+
+.income-clicked {
+  @apply bg-green-500 text-white;
+}
+
+.expense-clicked {
+  @apply bg-red-500 text-white;
 }

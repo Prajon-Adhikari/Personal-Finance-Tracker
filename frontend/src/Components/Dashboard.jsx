@@ -2,8 +2,16 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import ReactApexChart from "react-apexcharts";
+import { Link } from "react-router-dom";
 import Panel from "./Panel";
-import { faChartSimple } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChartSimple,
+  faUtensils,
+  faCartShopping,
+  faBolt,
+  faWallet,
+  faDollarSign,
+} from "@fortawesome/free-solid-svg-icons";
 
 class AreaChart extends React.Component {
   constructor(props) {
@@ -11,11 +19,11 @@ class AreaChart extends React.Component {
     this.state = {
       series: [
         {
-          name: "series1",
+          name: "Income",
           data: [31, 40, 28, 51, 42, 109, 100],
         },
         {
-          name: "series2",
+          name: "Expenses",
           data: [11, 32, 45, 32, 34, 52, 41],
         },
       ],
@@ -24,6 +32,7 @@ class AreaChart extends React.Component {
           height: 300,
           type: "area",
         },
+        colors: ["#72BF78", "#F95454"],
         dataLabels: {
           enabled: false,
         },
@@ -33,18 +42,18 @@ class AreaChart extends React.Component {
         xaxis: {
           type: "datetime",
           categories: [
-            "2018-09-19T00:00:00.000Z",
-            "2018-09-19T01:30:00.000Z",
-            "2018-09-19T02:30:00.000Z",
-            "2018-09-19T03:30:00.000Z",
-            "2018-09-19T04:30:00.000Z",
-            "2018-09-19T05:30:00.000Z",
-            "2018-09-19T06:30:00.000Z",
+            "2025-01-01T00:00:00.000Z",
+            "2025-02-01T00:00:00.000Z",
+            "2025-03-01T00:00:00.000Z",
+            "2025-04-01T00:00:00.000Z",
+            "2025-05-01T00:00:00.000Z",
+            "2025-06-01T00:00:00.000Z",
+            "2025-07-01T00:00:00.000Z",
           ],
         },
         tooltip: {
           x: {
-            format: "dd/MM/yy HH:mm",
+            format: "MMM yyyy",
           },
         },
       },
@@ -72,7 +81,7 @@ export default function Dashboard() {
         type: "pie",
       },
       colors: ["#FF407D", "#6C48C5", "#FAB12F"], // Custom colors
-      labels: ["Food", "Clothes", "Others"],
+      labels: ["Food", "Shopping", "Others"],
       responsive: [
         {
           breakpoint: 480,
@@ -171,12 +180,12 @@ export default function Dashboard() {
           figure={faChartSimple}
           amount="4000.8"
           date="Jan01- Jan29"
-          begColor="from-pink-600"
-          midColor="via-pink-500"
-          endColor="to-customPurple1"
+          begColor="from-pink-500"
+          midColor="via-pink-600"
+          endColor="to-pink-700"
         />
         <Panel
-          title="Total Earning"
+          title="Total Expenses"
           figure={faChartSimple}
           amount="4000.8"
           date="Jan01- Jan29"
@@ -203,11 +212,16 @@ export default function Dashboard() {
           endColor="to-customGold2"
         />
       </div>
-      <div className="p-6 bg-white mr-[20px] rounded-lg shadow-md">
-        <h3 className="text-2xl font-semibold mb-4">Recent Transactions</h3>
+      <div className="p-6 bg-white mr-[20px] rounded-lg ">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-2xl font-semibold mb-4">Recent Transactions</h3>
+          <button className="bg-red-700 px-4 py-1 rounded-lg mr-2 mb-2 text-white">
+            <Link to="/transactions">View All</Link>
+          </button>
+        </div>
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className="bg-gray-300">
               <th className="px-4 py-2 border">Date</th>
               <th className="px-4 py-2 border">Description</th>
               <th className="px-4 py-2 border">Amount</th>
@@ -229,14 +243,45 @@ export default function Dashboard() {
                     : `+$${transaction.amount}`}
                 </td>
                 {transaction.amount < 0 ? (
-                  <td className="text-center">
-                    <div className="bg-red-500 text-white my-2 mx-auto w-[100px] py-1 rounded-lg">
+                  <td className="text-center border">
+                    <div className="bg-red-500 text-white my-2 mx-auto w-[120px] py-1 rounded-lg">
+                      {transaction.category === "Shopping" ? (
+                        <FontAwesomeIcon
+                          icon={faCartShopping}
+                          className="pr-2"
+                        />
+                      ) : transaction.category === "Food" ? (
+                        <FontAwesomeIcon icon={faUtensils} className="pr-2" />
+                      ) : transaction.category === "Salary" ? (
+                        <FontAwesomeIcon icon={faWallet} className="pr-2" />
+                      ) : transaction.category === "Electricity" ? (
+                        <FontAwesomeIcon icon={faBolt} className="pr-2" />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={faCartShopping}
+                          className="pr-2"
+                        />
+                      )}
                       {transaction.category}
                     </div>
                   </td>
                 ) : (
-                  <td className="text-center">
-                    <div className="bg-green-500 text-white  my-2 mx-auto w-[100px] py-1 rounded-lg">
+                  <td className="text-center border">
+                    <div className="bg-green-500 text-white  my-2 mx-auto w-[120px] py-1 rounded-lg">
+                      {transaction.category === "Shopping" ? (
+                        <FontAwesomeIcon
+                          icon={faCartShopping}
+                          className="pr-2"
+                        />
+                      ) : transaction.category === "Food" ? (
+                        <FontAwesomeIcon icon={faUtensils} className="pr-2" />
+                      ) : transaction.category === "Salary" ? (
+                        <FontAwesomeIcon icon={faWallet} className="pr-2" />
+                      ) : transaction.category === "Electricity" ? (
+                        <FontAwesomeIcon icon={faBolt} className="pr-2" />
+                      ) : (
+                        <FontAwesomeIcon icon={faDollarSign} className="pr-2" />
+                      )}
                       {transaction.category}
                     </div>
                   </td>

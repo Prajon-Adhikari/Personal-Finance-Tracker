@@ -13,7 +13,7 @@ export default function Menu() {
         <div className="text-slate-600 text-2xl flex flex-col items-center mt-[80px] gap-8">
           <Link
             to="/dashboard"
-            className={`w-full pl-10 py-1 ${
+            className={`w-full pl-10 py-1 menu-elements ${
               location.pathname === "/dashboard" ? "active-element" : ""
             }`}
           >
@@ -21,7 +21,7 @@ export default function Menu() {
           </Link>
           <Link
             to="/transactions"
-            className={`w-full pl-10 py-1 ${
+            className={`w-full pl-10 py-1 menu-elements ${
               location.pathname === "/transactions" ? "active-element" : ""
             }`}
           >
@@ -29,7 +29,7 @@ export default function Menu() {
           </Link>
           <Link
             to="/budget"
-            className={`w-full pl-10 py-1 ${
+            className={`w-full pl-10 py-1 menu-elements ${
               location.pathname === "/budget" ? "active-element" : ""
             }`}
           >
@@ -37,7 +37,7 @@ export default function Menu() {
           </Link>
           <Link
             to="/reports"
-            className={`w-full pl-10 py-1 ${
+            className={`w-full pl-10 py-1 menu-elements ${
               location.pathname === "/reports" ? "active-element" : ""
             }`}
           >
@@ -45,7 +45,7 @@ export default function Menu() {
           </Link>
           <Link
             to="/setting"
-            className={`w-full pl-10 py-1 ${
+            className={`w-full pl-10 py-1 menu-elements${
               location.pathname === "/setting" ? "active-element" : ""
             }`}
           >
