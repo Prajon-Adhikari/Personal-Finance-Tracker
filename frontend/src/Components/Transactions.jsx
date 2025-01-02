@@ -163,7 +163,11 @@ export default function Transactions() {
           </div>
         </fieldset>
       </div>
-
+      <div className=" mx-10 my-8 mr-[90px]">
+        <button className="bg-emerald-400 text-white px-6 py-3 rounded-lg text-xl">
+          Add Transactions
+        </button>
+      </div>
       <div className="p-6 bg-white mr-[20px] rounded-lg ">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-semibold text-gray-500">
