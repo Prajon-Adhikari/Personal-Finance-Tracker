@@ -5,9 +5,9 @@ export default function Menu() {
   const location = useLocation();
 
   return (
-    <div className="flex bg-slate-400">
-      <div className="h-screen rounded-tl-2xl bg-white w-[270px] mx-2">
-        <h2 className="text-4xl rounded-tl-2xl text-center py-4 bg-gradient-to-r from-pink-400 to-purple-500 text-white">
+    <div className="flex gap-6 bg-gray-100">
+      <div className="h-screen rounded-tl-2xl bg-white w-[270px]">
+        <h2 className="text-4xl text-center py-4 bg-gradient-to-r from-pink-400 to-purple-500 text-white">
           TRACKER
         </h2>
         <div className="text-slate-600 text-2xl flex flex-col items-center mt-[80px] gap-8">
