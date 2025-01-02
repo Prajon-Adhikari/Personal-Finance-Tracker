@@ -6,7 +6,7 @@ export default function Menu() {
 
   return (
     <div className="flex gap-6 bg-gray-100">
-      <div className="h-screen rounded-tl-2xl bg-white w-[270px]">
+      <div className="h-screen rounded-tl-2xl bg-white w-[270px] fixed">
         <h2 className="text-4xl text-center py-4 bg-gradient-to-r from-pink-400 to-purple-500 text-white">
           TRACKER
         </h2>
@@ -53,7 +53,9 @@ export default function Menu() {
           </Link>
         </div>
       </div>
-      <Outlet />
+      <div className="ml-[290px] flex-1 h-screen overflow-y-auto">
+        <Outlet />
+      </div>
     </div>
   );
 }

@@ -89,6 +89,45 @@ export default function Dashboard() {
     },
   });
 
+  // Dummy Data for Transactions
+  const transactions = [
+    {
+      id: 1,
+      date: "01/01/2025",
+      description: "Groceries",
+      amount: -50.0,
+      category: "Shopping",
+    },
+    {
+      id: 2,
+      date: "01/02/2025",
+      description: "Freelance Payment",
+      amount: 500.0,
+      category: "Salary",
+    },
+    {
+      id: 3,
+      date: "01/03/2025",
+      description: "Electricity Bill",
+      amount: -120.0,
+      category: "Electricity",
+    },
+    {
+      id: 4,
+      date: "01/04/2025",
+      description: "Coffee",
+      amount: -5.5,
+      category: "Food",
+    },
+    {
+      id: 5,
+      date: "01/05/2025",
+      description: "Online Purchase",
+      amount: -200.0,
+      category: "Shopping",
+    },
+  ];
+
   return (
     <div className="w-full">
       <div className="bg-white flex justify-between items-center px-10 w-full h-[70px]">
@@ -96,19 +135,19 @@ export default function Dashboard() {
         <FontAwesomeIcon icon={faUser} />
       </div>
       <div className="flex gap-6 mt-4">
-        <div className="w-[800px] p-6 flex justify-between rounded-xl bg-white shadow-lg">
+        <div className="w-[780px] p-6 flex justify-between rounded-xl bg-white shadow-lg">
           <div className="flex flex-col gap-8">
             <div>
               <div className="text-xl">Dashboard</div>
-              <div className="text-gray-400">The main the tehbdfndk</div>
+              <div className="text-gray-400">Overview of your stats</div>
             </div>
             <div>
               <div className="text-3xl font-bold">$ 3445.78</div>
-              <div className="text-gray-400">The main the tehbdfndk</div>
+              <div className="text-gray-400">Total earnings this month</div>
             </div>
             <div>
               <div className="text-3xl font-bold">82</div>
-              <div className="text-gray-400">The main the tehbdfndk</div>
+              <div className="text-gray-400">Transactions processed</div>
             </div>
             <button className="bg-pink-600 rounded text-white py-2">
               Look Summary
@@ -122,7 +161,7 @@ export default function Dashboard() {
             options={pieChartState.options}
             series={pieChartState.series}
             type="pie"
-            width={380}
+            width={360}
           />
         </div>
       </div>
@@ -163,6 +202,49 @@ export default function Dashboard() {
           midColor="via-customGold1"
           endColor="to-customGold2"
         />
+      </div>
+      <div className="p-6 bg-white mr-[20px] rounded-lg shadow-md">
+        <h3 className="text-2xl font-semibold mb-4">Recent Transactions</h3>
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="px-4 py-2 border">Date</th>
+              <th className="px-4 py-2 border">Description</th>
+              <th className="px-4 py-2 border">Amount</th>
+              <th className="px-4 py-2 border">Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((transaction) => (
+              <tr key={transaction.id} className="hover:bg-gray-100">
+                <td className="px-4 py-2 border">{transaction.date}</td>
+                <td className="px-4 py-2 border">{transaction.description}</td>
+                <td
+                  className={`px-4 py-2 border ${
+                    transaction.amount < 0 ? "text-red-500" : "text-green-500"
+                  }`}
+                >
+                  {transaction.amount < 0
+                    ? `-$${Math.abs(transaction.amount)}`
+                    : `+$${transaction.amount}`}
+                </td>
+                {transaction.amount < 0 ? (
+                  <td className="text-center">
+                    <div className="bg-red-500 text-white my-2 mx-auto w-[100px] py-1 rounded-lg">
+                      {transaction.category}
+                    </div>
+                  </td>
+                ) : (
+                  <td className="text-center">
+                    <div className="bg-green-500 text-white  my-2 mx-auto w-[100px] py-1 rounded-lg">
+                      {transaction.category}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
