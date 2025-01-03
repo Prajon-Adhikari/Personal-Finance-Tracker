@@ -12,41 +12,41 @@ export default function Menu() {
         </h2>
         <div className="text-slate-600 text-2xl flex flex-col items-center mt-[80px] gap-8">
           <Link
-            to="/dashboard"
+            to="/menu/dashboard"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/dashboard" ? "active-element" : ""
+              location.pathname === "/menu/dashboard" ? "active-element" : ""
             }`}
           >
             Dashboard
           </Link>
           <Link
-            to="/transactions"
+            to="/menu/transactions"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/transactions" ? "active-element" : ""
+              location.pathname === "/menu/transactions" ? "active-element" : ""
             }`}
           >
             Transactions
           </Link>
           <Link
-            to="/budget"
+            to="/menu/budget"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/budget" ? "active-element" : ""
+              location.pathname === "/menu/budget" ? "active-element" : ""
             }`}
           >
             Budget Planning
           </Link>
           <Link
-            to="/reports"
+            to="/menu/reports"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/reports" ? "active-element" : ""
+              location.pathname === "/menu/reports" ? "active-element" : ""
             }`}
           >
             Reports
           </Link>
           <Link
-            to="/setting"
+            to="/menu/setting"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/setting" ? "active-element" : ""
+              location.pathname === "/menu/setting" ? "active-element" : ""
             }`}
           >
             Setting

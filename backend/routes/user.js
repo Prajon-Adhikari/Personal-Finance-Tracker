@@ -3,16 +3,38 @@ const User = require("../models/user.js");
 
 const router = express.Router();
 
-router.get("/signup", async (req, res) => {
-  const { firstName, lastName, email, password, mobile } = req.body;
+router.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    await User.create({
-      firstName,
-      lastName,
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ message: "User Not Found" });
+    }
+
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Incorrect Password" });
+    }
+
+    return res.status(200).json({
+      message: "Sign In successfully",
+    });
+  } catch (error) {
+    return res.status(500).json("Error:", error);
+  }
+});
+
+router.post("/signup", async (req, res) => {
+  const { fullName, email, password, mobile } = req.body;
+  try {
+    const user = await User.create({
+      fullName,
       email,
       password,
       mobile,
     });
+    console.log(user);
     return res.status(200).json({ message: "User register successfully" });
   } catch (error) {
     console.log("Error: Unsuccessfull registration", error);

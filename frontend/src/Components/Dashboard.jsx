@@ -216,7 +216,7 @@ export default function Dashboard() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-semibold mb-4">Recent Transactions</h3>
           <button className="bg-red-700 px-4 py-1 rounded-lg mr-2 mb-2 text-white">
-            <Link to="/transactions">View All</Link>
+            <Link to="/menu/transactions">View All</Link>
           </button>
         </div>
         <table className="w-full text-left border-collapse">

@@ -7,6 +7,7 @@ import Reports from "./Components/Reports";
 import Setting from "./Components/Setting";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SignUp from "./Components/SignUp";
+import SignIn from "./Components/SignIn";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/user/signup" />} />
         <Route path="/user/signup" element={<SignUp />} />
+        <Route path="/user/signin" element={<SignIn />} />
         <Route path="/menu" element={<Menu />}>
           <Route index element={<Navigate to="menu/dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
