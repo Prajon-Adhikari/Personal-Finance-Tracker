@@ -2,13 +2,9 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import {
-  faUtensils,
-  faCartShopping,
-  faBolt,
-  faWallet,
-  faDollarSign,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import AddTransactions from "./AddTransactions";
+import { MyContext } from "./MyContext";
 
 export default function Transactions() {
   // Dummy Data for Transactions
@@ -94,6 +90,7 @@ export default function Transactions() {
 
   const [type, setType] = useState("");
   const [showCategory, setShowCategory] = useState("");
+  const [showAddTransactions, setShowAddTransactions] = useState(false);
 
   // Filter transactions by type and category
   const filteredTransactions = transactions.filter((transaction) => {
@@ -164,7 +161,10 @@ export default function Transactions() {
         </fieldset>
       </div>
       <div className=" mx-10 my-8 mr-[90px]">
-        <button className="bg-emerald-400 text-white px-6 py-3 rounded-lg text-xl">
+        <button
+          className="bg-emerald-400 text-white px-6 py-3 rounded-lg text-xl"
+          onClick={() => setShowAddTransactions(true)}
+        >
           Add Transactions
         </button>
       </div>
@@ -219,7 +219,8 @@ export default function Transactions() {
               <th className="px-4 py-2 border">Date</th>
               <th className="px-4 py-2 border">Description</th>
               <th className="px-4 py-2 border">Amount</th>
-              <th className="px-4 py-2 border">Category</th>
+              <th className="px-4 py-2 border text-center">Category</th>
+              <th className="px-4 py-2 border text-center">Edit</th>
             </tr>
           </thead>
           <tbody>
@@ -247,11 +248,28 @@ export default function Transactions() {
                     {transaction.category}
                   </div>
                 </td>
+                <td className="py-3 border flex gap-3 justify-center  ">
+                  <div className="bg-blue-400 text-white py-1 px-2 rounded">
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </div>
+                  <div className="bg-red-400 text-white py-1 px-2 rounded">
+                    <FontAwesomeIcon icon={faTrash} />
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {showAddTransactions ? (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+          <MyContext.Provider value={{ setShowAddTransactions }}>
+            <AddTransactions />
+          </MyContext.Provider>
+        </div>
+      ) : (
+        ""
+      )}
     </>
   );
 }
