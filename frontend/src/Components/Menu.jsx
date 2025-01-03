@@ -45,7 +45,7 @@ export default function Menu() {
           </Link>
           <Link
             to="/setting"
-            className={`w-full pl-10 py-1 menu-elements${
+            className={`w-full pl-10 py-1 menu-elements ${
               location.pathname === "/setting" ? "active-element" : ""
             }`}
           >
