@@ -4,6 +4,8 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 export default function Menu() {
   const location = useLocation();
 
+  const isActive = (basePath) => location.pathname.startsWith(basePath);
+
   return (
     <div className="flex gap-6 bg-gray-100">
       <div className="h-screen rounded-tl-2xl bg-white w-[270px] fixed">
@@ -14,7 +16,7 @@ export default function Menu() {
           <Link
             to="/menu/dashboard"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/menu/dashboard" ? "active-element" : ""
+              isActive("/menu/dashboard") ? "active-element" : ""
             }`}
           >
             Dashboard
@@ -22,7 +24,7 @@ export default function Menu() {
           <Link
             to="/menu/transactions"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/menu/transactions" ? "active-element" : ""
+              isActive("/menu/transactions") ? "active-element" : ""
             }`}
           >
             Transactions
@@ -30,7 +32,7 @@ export default function Menu() {
           <Link
             to="/menu/budget"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/menu/budget" ? "active-element" : ""
+              isActive("/menu/budget") ? "active-element" : ""
             }`}
           >
             Budget Planning
@@ -38,7 +40,7 @@ export default function Menu() {
           <Link
             to="/menu/reports"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/menu/reports" ? "active-element" : ""
+              isActive("/menu/reports") ? "active-element" : ""
             }`}
           >
             Reports
@@ -46,7 +48,7 @@ export default function Menu() {
           <Link
             to="/menu/setting"
             className={`w-full pl-10 py-1 menu-elements ${
-              location.pathname === "/menu/setting" ? "active-element" : ""
+              isActive("/menu/setting") ? "active-element" : ""
             }`}
           >
             Setting
