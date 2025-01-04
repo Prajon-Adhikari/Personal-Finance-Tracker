@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faKey, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function Security() {
+  const [enableAuthentication, setEnableAuthentication] = useState(false);
+
+  function handleEnable() {
+    setEnableAuthentication(!enableAuthentication);
+  }
   return (
     <div>
       <div className="border-b-2 pb-6 ml-2">
@@ -126,19 +133,40 @@ export default function Security() {
                   Enable Authentication
                 </div>
                 <div>
-                  <button>button</button>
+                  <button
+                    className={`w-[40px] p-[2px] h-[22px]  rounded-2xl flex ${
+                      enableAuthentication
+                        ? "activeEnableBtn"
+                        : "deactiveEnableBtn"
+                    }`}
+                    onClick={handleEnable}
+                  >
+                    <div className={`w-[17px] h-full rounded-full bg-white `}>
+                      &emsp;
+                    </div>
+                  </button>
                 </div>
               </div>
               <div className="text-slate-400 pt-1">
                 Enable Two Factor Authentication to enhance the security
               </div>
             </div>
-            <div className="py-4  border-b-2">
+            <div className="py-4 flex gap-4 items-center  border-b-2 font-semibold">
+              <FontAwesomeIcon
+                icon={faPlus}
+                className="bg-slate-300 p-2 rounded-lg text-slate-600 text-lg"
+              />
               <div>Authentication App</div>
             </div>
             <div className="py-4">
-              <div className="font-semibold">Security Key</div>
-              <div className="text-slate-400 pt-1">
+              <div className="flex gap-4 items-center">
+                <FontAwesomeIcon
+                  icon={faKey}
+                  className="bg-slate-300 p-2 rounded-lg text-slate-600 text-lg"
+                />
+                <div className="font-semibold">Security Key</div>
+              </div>
+              <div className="text-slate-400 pt-2">
                 Use physical security key to protexct your account
               </div>
               <div>
