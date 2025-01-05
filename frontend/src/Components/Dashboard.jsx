@@ -32,7 +32,7 @@ class AreaChart extends React.Component {
           height: 300,
           type: "area",
         },
-        colors: ["#72BF78", "#F95454"],
+        colors: ["#88D66C", "#F95454"],
         dataLabels: {
           enabled: false,
         },

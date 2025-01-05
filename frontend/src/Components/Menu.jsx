@@ -53,6 +53,9 @@ export default function Menu() {
           >
             Setting
           </Link>
+          <Link to="/user/signin" className={`w-full pl-10 py-1 menu-elements`}>
+            Log Out
+          </Link>
         </div>
       </div>
       <div className="ml-[290px] flex-1 h-screen overflow-y-auto">

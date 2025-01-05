@@ -1,9 +1,10 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 export default function Setting() {
+  const location = useLocation();
   return (
     <div className="h-screen flex flex-col">
       {/* Top Header */}
@@ -22,31 +23,51 @@ export default function Setting() {
           <div className="flex flex-col gap-4 mt-10 h-[600px] ml-5 border-r-2">
             <Link
               to="/menu/setting/myprofile"
-              className="py-2 mr-4 rounded-3xl hover:bg-blue-300 px-4 hover:text-white"
+              className={`py-2 mr-4 rounded-3xl px-4 hover:text-blue-400 ${
+                location.pathname === "/menu/setting/myprofile"
+                  ? "active-setting"
+                  : ""
+              }`}
             >
               My Profile
             </Link>
             <Link
               to="/menu/setting/security"
-              className="py-2 mr-4 rounded-3xl hover:bg-blue-300 px-4 hover:text-white"
+              className={`py-2 mr-4 rounded-3xl px-4 hover:text-blue-400 ${
+                location.pathname === "/menu/setting/security"
+                  ? "active-setting"
+                  : ""
+              }`}
             >
               Security
             </Link>
             <Link
               to="/menu/setting/notifications"
-              className="py-2 mr-4 rounded-3xl hover:bg-blue-300 px-4 hover:text-white"
+              className={`py-2 mr-4 rounded-3xl px-4 hover:text-blue-400 ${
+                location.pathname === "/menu/setting/notifications"
+                  ? "active-setting"
+                  : ""
+              }`}
             >
               Notifications
             </Link>
             <Link
               to="/menu/setting/dataexport"
-              className="py-2 mr-4 rounded-3xl hover:bg-blue-300 px-4 hover:text-white"
+              className={`py-2 mr-4 rounded-3xl px-4 hover:text-blue-400 ${
+                location.pathname === "/menu/setting/dataexport"
+                  ? "active-setting"
+                  : ""
+              }`}
             >
               Data Export
             </Link>
             <Link
               to="/menu/setting/deleteaccount"
-              className="py-2 mr-4 text-red-500 rounded-3xl hover:bg-blue-300 px-4 hover:text-white"
+              className={`py-2 mr-4 rounded-3xl px-4 text-red-500 hover:text-blue-400 ${
+                location.pathname === "/menu/setting/deleteaccount"
+                  ? "active-setting"
+                  : ""
+              }`}
             >
               Delete Account
             </Link>
