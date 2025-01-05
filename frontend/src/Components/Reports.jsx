@@ -3,11 +3,133 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import ReactApexChart from "react-apexcharts";
 
+class AreaChart extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      series: [
+        {
+          name: "Food",
+          data: [31, 55, 28, 51],
+        },
+        {
+          name: "Shooping",
+          data: [20, 32, 45, 32],
+        },
+        {
+          name: "Electricity",
+          data: [11, 22, 25, 20],
+        },
+        {
+          name: "Entertainment",
+          data: [0, 34, 26, 18],
+        },
+        {
+          name: "Health",
+          data: [0, 15, 32, 25],
+        },
+        {
+          name: "Others",
+          data: [15, 40, 20, 32],
+        },
+      ],
+      options: {
+        chart: {
+          height: 300,
+          type: "line",
+        },
+        colors: [
+          "#D2649A",
+          "#FF9100",
+          "#914F1E",
+          "#000957",
+          "#B03052",
+          "#F95454",
+        ],
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: "smooth",
+          width: 4,
+          colors: [
+            "#D2649A",
+            "#FF9100",
+            "#914F1E",
+            "#000957",
+            "#B03052",
+            "#F95454",
+          ],
+        },
+        fill: {
+          opacity: 0,
+        },
+        xaxis: {
+          categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+    };
+  }
+
+  render() {
+    return (
+      <ReactApexChart
+        options={this.state.options}
+        series={this.state.series}
+        type="area"
+        height={420}
+        width={950}
+      />
+    );
+  }
+}
+
 export default function Reports() {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(
     today.toISOString().slice(0, 7)
   );
+
+  const [pieChartState, setPieChartState] = useState({
+    series: [70, 55, 24, 30, 25, 15],
+    options: {
+      chart: {
+        type: "pie",
+      },
+      colors: [
+        "#D2649A",
+        "#FF9100",
+        "#914F1E",
+        "#000957",
+        "#B03052",
+        "#F95454",
+      ], // Custom colors
+      labels: [
+        "Food",
+        "Shopping",
+        "Electricity",
+        "Entertainment",
+        "Health",
+        "Others",
+      ],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
+    },
+  });
 
   const chartState = {
     series: [
@@ -23,7 +145,7 @@ export default function Reports() {
     options: {
       chart: {
         type: "bar",
-        height: 350,
+        height: 500,
       },
       plotOptions: {
         bar: {
@@ -38,7 +160,7 @@ export default function Reports() {
       },
       stroke: {
         show: true,
-        width: 2,
+        width: 4,
         colors: ["transparent"],
       },
       xaxis: {
@@ -131,6 +253,60 @@ export default function Reports() {
                 type="bar"
                 height={280}
               />
+            </div>
+          </div>
+        </div>
+        <div className="mt-12">
+          <div className="rounded-md flex-col gap-12 items-center shadow-[0px_0px_5px] flex justify-center p-8">
+            <AreaChart />
+            <div className="flex items-center gap-[100px]">
+              <div className=" rounded-lg p-4 border-slate-200">
+                <div className="pb-4 font-bold text-2xl">Expenses</div>
+                <ReactApexChart
+                  options={pieChartState.options}
+                  series={pieChartState.series}
+                  type="pie"
+                  width={400}
+                />
+              </div>
+              <div>
+                <table className="border-collapse border border-gray-400 text-left">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border w-[200px] border-gray-400 px-4 py-2">
+                        Category
+                      </th>
+                      <th className="border w-[200px] border-gray-400 px-4 py-2">
+                        Percentage
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pieChartState.options.labels.map((label, index) => {
+                      // Calculate percentage for each category
+                      const total = pieChartState.series.reduce(
+                        (sum, value) => sum + value,
+                        0
+                      );
+                      const percentage = (
+                        (pieChartState.series[index] / total) *
+                        100
+                      ).toFixed(2);
+
+                      return (
+                        <tr key={index}>
+                          <td className="border border-gray-400 px-4 py-2">
+                            {label}
+                          </td>
+                          <td className="border border-gray-400 px-4 py-2">
+                            {percentage}%
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
