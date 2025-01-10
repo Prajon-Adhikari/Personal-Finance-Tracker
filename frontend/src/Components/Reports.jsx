@@ -191,18 +191,18 @@ export default function Reports() {
     series: [
       {
         name: "Present Month",
-        data: [100, 40, 21, 35, 22, 30, 20],
+        data: [120, 40, 21, 35, 22, 30, 20],
       },
       {
         name: "Previous Month", // New line series
-        data: [120, 30, 25, 22, 12, 35, 22], // Data for the new line
+        data: [100, 30, 25, 22, 12, 35, 22], // Data for the new line
       },
     ],
     options: {
       chart: {
         height: 350,
         type: "line",
-           zoom: {
+        zoom: {
           enabled: false,
         },
       },

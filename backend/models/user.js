@@ -18,6 +18,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    bio: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    postalCode: {
+      type: Number,
+    },
+    profilePic: {
+      type: Buffer,
+    },
   },
   { timestamps: true }
 );
