@@ -37,6 +37,9 @@ class AreaChart extends React.Component {
         chart: {
           height: 300,
           type: "line",
+          zoom: {
+            enabled: false,
+          },
         },
         colors: [
           "#D2649A",
@@ -184,6 +187,55 @@ export default function Reports() {
     },
   };
 
+  const lineChartState = {
+    series: [
+      {
+        name: "Present Month",
+        data: [100, 40, 21, 35, 22, 30, 20],
+      },
+      {
+        name: "Previous Month", // New line series
+        data: [120, 30, 25, 22, 12, 35, 22], // Data for the new line
+      },
+    ],
+    options: {
+      chart: {
+        height: 350,
+        type: "line",
+           zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "straight",
+      },
+      title: {
+        text: "Product Trends by Month",
+        align: "left",
+      },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"], // alternating row colors
+          opacity: 0.5,
+        },
+      },
+      xaxis: {
+        categories: [
+          "Sales",
+          "Food",
+          "Shopping",
+          "Electricity",
+          "Entertainment",
+          "Health",
+          "Others",
+        ],
+      },
+    },
+  };
+
   return (
     <>
       <div className="bg-white flex justify-between items-center px-10 w-full h-[70px]">
@@ -307,6 +359,28 @@ export default function Reports() {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+          <div className="shadow-[0px_0px_5px] flex flex-col justify-center my-10 rounded-md px-10 py-6">
+            <div className="flex justify-center">
+              <ReactApexChart
+                options={lineChartState.options}
+                series={lineChartState.series}
+                type="line"
+                height={420}
+                width={900}
+              />
+            </div>
+            <div className="mx-[140px] my-10 text-xl">
+              <ul className="flex flex-col gap-4 list-disc">
+                <li>Sales is increased by - 20%</li>
+                <li>Expense in Food is decreased by - 10%</li>
+                <li>Expense in Shopping is increased by - 05%</li>
+                <li>Electricity bill decreased by - 20%</li>
+                <li>Expense in Entertainment is decreased by - 15%</li>
+                <li>Expense in Health is increased by - 07%</li>
+                <li>Other Expenses is increased by - 04%</li>
+              </ul>
             </div>
           </div>
         </div>
