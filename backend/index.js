@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const userRoute = require("./routes/user.js");
 const transactionRoute = require("./routes/transactions.js");
+const reportRoute = require("./routes/reports.js");
 const mongoose = require("mongoose");
 
 const PORT = 8000;
@@ -24,5 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoute);
 app.use("/menu/transactions", transactionRoute);
+app.use("/menu/reports", reportRoute);
 
 app.listen(PORT, () => console.log(`Server is listening at ${PORT}`));

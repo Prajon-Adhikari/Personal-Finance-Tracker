@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import ReactApexChart from "react-apexcharts";
@@ -95,6 +95,49 @@ export default function Reports() {
   const [currentMonth, setCurrentMonth] = useState(
     today.toISOString().slice(0, 7)
   );
+  const [chartData, setChartData] = useState({
+    series: [],
+    categories: [],
+  });
+
+  useEffect(() => {
+    fetchDataForMonth(currentMonth);
+    console.log(currentMonth);
+  }, [currentMonth]);
+
+  const fetchDataForMonth = async (month) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/menu/reports/${month}`
+      );
+      const data = await response.json();
+
+      const categories = [
+        "Food",
+        "Shopping",
+        "Electricity",
+        "Entertainment",
+        "Health",
+        "Others",
+      ];
+      const categoryTotal = categories.map((category) => {
+        return data
+          .filter((transaction) => transaction.category === category)
+          .reduce((sum, transaction) => sum + transaction.amount, 0);
+      });
+      setChartData({
+        series: [
+          {
+            name: "Expenses",
+            data: categoryTotal,
+          },
+        ],
+        categories: categories,
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const [pieChartState, setPieChartState] = useState({
     series: [70, 55, 24, 30, 25, 15],
@@ -134,58 +177,58 @@ export default function Reports() {
     },
   });
 
-  const chartState = {
-    series: [
-      {
-        name: "Expense",
-        data: [44, 55, 57, 56],
-      },
-      {
-        name: "Revenue",
-        data: [76, 85, 101, 98],
-      },
-    ],
-    options: {
-      chart: {
-        type: "bar",
-        height: 500,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: "55%",
-          borderRadius: 5,
-        },
-      },
-      colors: ["#F95454", "#88D66C"],
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 4,
-        colors: ["transparent"],
-      },
-      xaxis: {
-        categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-      },
-      yaxis: {
-        title: {
-          text: "$ (hundereds)",
-        },
-      },
-      fill: {
-        opacity: 1,
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return "$ " + val + " thousands";
-          },
-        },
-      },
-    },
-  };
+  // const chartState = {
+  //   series: [
+  //     {
+  //       name: "Expense",
+  //       data: [44, 55, 57, 56],
+  //     },
+  //     {
+  //       name: "Revenue",
+  //       data: [76, 85, 101, 98],
+  //     },
+  //   ],
+  //   options: {
+  //     chart: {
+  //       type: "bar",
+  //       height: 500,
+  //     },
+  //     plotOptions: {
+  //       bar: {
+  //         horizontal: false,
+  //         columnWidth: "55%",
+  //         borderRadius: 5,
+  //       },
+  //     },
+  //     colors: ["#F95454", "#88D66C"],
+  //     dataLabels: {
+  //       enabled: false,
+  //     },
+  //     stroke: {
+  //       show: true,
+  //       width: 4,
+  //       colors: ["transparent"],
+  //     },
+  //     xaxis: {
+  //       categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
+  //     },
+  //     yaxis: {
+  //       title: {
+  //         text: "$ (hundereds)",
+  //       },
+  //     },
+  //     fill: {
+  //       opacity: 1,
+  //     },
+  //     tooltip: {
+  //       y: {
+  //         formatter: function (val) {
+  //           return "$ " + val + " thousands";
+  //         },
+  //       },
+  //     },
+  //   },
+  // };
 
   const lineChartState = {
     series: [
@@ -300,8 +343,11 @@ export default function Reports() {
             </div>
             <div className="w-[320px]">
               <ReactApexChart
-                options={chartState.options}
-                series={chartState.series}
+                options={{
+                  chart: { type: "bar" },
+                  xaxis: { categories: chartData.categories },
+                }}
+                series={chartData.series}
                 type="bar"
                 height={280}
               />
