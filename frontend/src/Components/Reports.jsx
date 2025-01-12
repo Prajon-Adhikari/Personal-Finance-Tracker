@@ -95,48 +95,100 @@ export default function Reports() {
   const [currentMonth, setCurrentMonth] = useState(
     today.toISOString().slice(0, 7)
   );
-  const [chartData, setChartData] = useState({
+  const [barChartData, setBarChartData] = useState({
     series: [],
     categories: [],
   });
 
   useEffect(() => {
-    fetchDataForMonth(currentMonth);
+    fetchBarGraphData(currentMonth);
     console.log(currentMonth);
   }, [currentMonth]);
 
-  const fetchDataForMonth = async (month) => {
+  const fetchBarGraphData = async (month) => {
     try {
       const response = await fetch(
         `http://localhost:8000/menu/reports/${month}`
       );
       const data = await response.json();
 
-      const categories = [
-        "Food",
-        "Shopping",
-        "Electricity",
-        "Entertainment",
-        "Health",
-        "Others",
-      ];
-      const categoryTotal = categories.map((category) => {
-        return data
-          .filter((transaction) => transaction.category === category)
-          .reduce((sum, transaction) => sum + transaction.amount, 0);
+      // Map the data to create series for the bar graph
+      const categories = ["Week 1", "Week 2", "Week 3", "Week 4"];
+      const incomeData = [0, 0, 0, 0];
+      const expenseData = [0, 0, 0, 0];
+
+      // Aggregate data into weeks
+      data.forEach((item) => {
+        const date = new Date(item.date); // Parse the date from the data item
+        const dayOfMonth = date.getDate(); // Get the day of the month
+        const weekIndex = Math.ceil(dayOfMonth / 7) - 1; // Calculate week index (0-based)
+
+        const amount = parseFloat(item.amount);
+        if (item.transactionType === "income") {
+          console.log(amount);
+          incomeData[weekIndex] += amount; // Accumulate income
+        } else if (item.transactionType === "expense") {
+          console.log(item.amount);
+          expenseData[weekIndex] += amount; // Accumulate expenses
+        }
       });
-      setChartData({
+
+      console.log(expenseData);
+
+      setBarChartData({
         series: [
           {
             name: "Expenses",
-            data: categoryTotal,
+            data: expenseData,
+          },
+          {
+            name: "Income",
+            data: incomeData,
           },
         ],
         categories: categories,
       });
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching bar graph data:", error);
     }
+  };
+
+  const barChartOptions = {
+    chart: {
+      type: "bar",
+      height: 400,
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "55%",
+        borderRadius: 5,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      show: true,
+      width: 2,
+    },
+    xaxis: {
+      categories: barChartData.categories,
+    },
+    yaxis: {
+      title: {
+        text: "$ (thousands)",
+      },
+    },
+    fill: {
+      opacity: 1,
+    },
+    colors: ["#F75454", "#88D66C"], // Custom colors for expenses and losses
+    tooltip: {
+      y: {
+        formatter: (val) => `$ ${val} thousands`,
+      },
+    },
   };
 
   const [pieChartState, setPieChartState] = useState({
@@ -176,59 +228,6 @@ export default function Reports() {
       ],
     },
   });
-
-  // const chartState = {
-  //   series: [
-  //     {
-  //       name: "Expense",
-  //       data: [44, 55, 57, 56],
-  //     },
-  //     {
-  //       name: "Revenue",
-  //       data: [76, 85, 101, 98],
-  //     },
-  //   ],
-  //   options: {
-  //     chart: {
-  //       type: "bar",
-  //       height: 500,
-  //     },
-  //     plotOptions: {
-  //       bar: {
-  //         horizontal: false,
-  //         columnWidth: "55%",
-  //         borderRadius: 5,
-  //       },
-  //     },
-  //     colors: ["#F95454", "#88D66C"],
-  //     dataLabels: {
-  //       enabled: false,
-  //     },
-  //     stroke: {
-  //       show: true,
-  //       width: 4,
-  //       colors: ["transparent"],
-  //     },
-  //     xaxis: {
-  //       categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-  //     },
-  //     yaxis: {
-  //       title: {
-  //         text: "$ (hundereds)",
-  //       },
-  //     },
-  //     fill: {
-  //       opacity: 1,
-  //     },
-  //     tooltip: {
-  //       y: {
-  //         formatter: function (val) {
-  //           return "$ " + val + " thousands";
-  //         },
-  //       },
-  //     },
-  //   },
-  // };
 
   const lineChartState = {
     series: [
@@ -343,13 +342,10 @@ export default function Reports() {
             </div>
             <div className="w-[320px]">
               <ReactApexChart
-                options={{
-                  chart: { type: "bar" },
-                  xaxis: { categories: chartData.categories },
-                }}
-                series={chartData.series}
+                options={barChartOptions}
+                series={barChartData.series}
                 type="bar"
-                height={280}
+                height={400}
               />
             </div>
           </div>
