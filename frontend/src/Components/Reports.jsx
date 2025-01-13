@@ -3,105 +3,48 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import ReactApexChart from "react-apexcharts";
 
-class AreaChart extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      series: [
-        {
-          name: "Food",
-          data: [31, 55, 28, 51],
-        },
-        {
-          name: "Shooping",
-          data: [20, 32, 45, 32],
-        },
-        {
-          name: "Electricity",
-          data: [11, 22, 25, 20],
-        },
-        {
-          name: "Entertainment",
-          data: [0, 34, 26, 18],
-        },
-        {
-          name: "Health",
-          data: [0, 15, 32, 25],
-        },
-        {
-          name: "Others",
-          data: [15, 40, 20, 32],
-        },
-      ],
-      options: {
-        chart: {
-          height: 300,
-          type: "line",
-          zoom: {
-            enabled: false,
-          },
-        },
-        colors: [
-          "#D2649A",
-          "#FF9100",
-          "#914F1E",
-          "#000957",
-          "#B03052",
-          "#F95454",
-        ],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: "smooth",
-          width: 4,
-          colors: [
-            "#D2649A",
-            "#FF9100",
-            "#914F1E",
-            "#000957",
-            "#B03052",
-            "#F95454",
-          ],
-        },
-        fill: {
-          opacity: 0,
-        },
-        xaxis: {
-          categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-        },
-        tooltip: {
-          enabled: true,
-        },
-      },
-    };
-  }
-
-  render() {
-    return (
-      <ReactApexChart
-        options={this.state.options}
-        series={this.state.series}
-        type="area"
-        height={420}
-        width={950}
-      />
-    );
-  }
-}
-
 export default function Reports() {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(
     today.toISOString().slice(0, 7)
   );
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [highestExpenseCategory, setHighestExpenseCategory] = useState("");
+
   const [barChartData, setBarChartData] = useState({
     series: [],
     categories: [],
   });
+  const [areaChartData, setAreaChartData] = useState({
+    series: [],
+    options: {
+      chart: {
+        height: 300,
+        type: "area",
+        zoom: { enabled: false },
+      },
+      colors: [
+        "#6EC207",
+        "#D2649A",
+        "#FF9100",
+        "#914F1E",
+        "#000957",
+        "#B03052",
+        "#F95454",
+        "#000000",
+      ],
+      dataLabels: { enabled: false },
+      stroke: { curve: "smooth", width: 4 },
+      fill: { opacity: 0.3 },
+      xaxis: { categories: ["Week 1", "Week 2", "Week 3", "Week 4"] },
+      tooltip: { enabled: true },
+    },
+  });
 
   useEffect(() => {
     fetchBarGraphData(currentMonth);
+    fetchAreaChartData(currentMonth);
     console.log(currentMonth);
   }, [currentMonth]);
 
@@ -124,6 +67,7 @@ export default function Reports() {
         const weekIndex = Math.ceil(dayOfMonth / 7) - 1; // Calculate week index (0-based)
 
         const amount = parseFloat(item.amount);
+
         if (item.transactionType === "income") {
           console.log(amount);
           incomeData[weekIndex] += amount; // Accumulate income
@@ -132,8 +76,17 @@ export default function Reports() {
           expenseData[weekIndex] += amount; // Accumulate expenses
         }
       });
+      const totalIncomeCalculated = incomeData.reduce(
+        (sum, week) => sum + week,
+        0
+      );
+      const totalExpenseCalculated = expenseData.reduce(
+        (sum, week) => sum + week,
+        0
+      );
 
-      console.log(expenseData);
+      setTotalIncome(totalIncomeCalculated);
+      setTotalExpense(totalExpenseCalculated);
 
       setBarChartData({
         series: [
@@ -189,6 +142,69 @@ export default function Reports() {
         formatter: (val) => `$ ${val} thousands`,
       },
     },
+  };
+
+  const fetchAreaChartData = async (month) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/menu/reports/${month}`
+      );
+      const data = await response.json();
+
+      const categories = ["Week 1", "Week 2", "Week 3", "Week 4"];
+      const FoodData = [0, 0, 0, 0];
+      const ShoppingData = [0, 0, 0, 0];
+      const SalesData = [0, 0, 0, 0];
+      const EntertainmentData = [0, 0, 0, 0];
+      const HealthData = [0, 0, 0, 0];
+      const ElectricityData = [0, 0, 0, 0];
+      const OtherData = [0, 0, 0, 0];
+      const SalaryData = [0, 0, 0, 0];
+
+      // Aggregate data into weeks
+      data.forEach((item) => {
+        const date = new Date(item.date); // Parse the date from the data item
+        const dayOfMonth = date.getDate(); // Get the day of the month
+        const weekIndex = Math.ceil(dayOfMonth / 7) - 1; // Calculate week index (0-based)
+
+        const amount = parseFloat(item.amount);
+        if (item.category === "Food") {
+          FoodData[weekIndex] += amount; // Accumulate income
+        } else if (item.category === "Shopping") {
+          ShoppingData[weekIndex] += amount; // Accumulate expenses
+        } else if (item.category === "Sales") {
+          SalesData[weekIndex] += amount; // Accumulate expenses
+        } else if (item.category === "Entertainment") {
+          EntertainmentData[weekIndex] += amount; // Accumulate expenses
+        } else if (item.category === "Health") {
+          HealthData[weekIndex] += amount; // Accumulate expenses
+        } else if (item.category === "Other") {
+          OtherData[weekIndex] += amount; // Accumulate expenses
+        } else if (item.category === "Electricity") {
+          ElectricityData[weekIndex] += amount; // Accumulate expenses
+        } else if (item.category === "Salary") {
+          SalaryData[weekIndex] += amount; // Accumulate expenses
+        }
+      });
+
+      const series = [
+        { name: "Sales", data: SalesData },
+        { name: "Salaries", data: SalaryData },
+        { name: "Food", data: FoodData },
+        { name: "Shopping", data: ShoppingData },
+        { name: "Entertainment", data: EntertainmentData },
+        { name: "Health", data: HealthData },
+        { name: "Electricity", data: ElectricityData },
+        { name: "Others", data: OtherData },
+      ];
+
+      setAreaChartData((prevState) => ({
+        ...prevState,
+        series: series,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const [pieChartState, setPieChartState] = useState({
@@ -306,10 +322,10 @@ export default function Reports() {
             <div className="font-semibold text-2xl pt-2 pb-6">Summary</div>
             <div className="py-4 font-medium text-lg">
               {" "}
-              Total Income : $4000
+              Total Income : ${totalIncome}
             </div>
             <div className="py-4 font-medium text-lg border-b-2">
-              Total Expenses : $3000
+              Total Expenses : ${totalExpense}
             </div>
             <div className="py-4 font-medium text-lg"> Net Balance : $1000</div>
             <div className="py-4 font-medium text-lg">
@@ -352,7 +368,13 @@ export default function Reports() {
         </div>
         <div className="mt-12">
           <div className="rounded-md flex-col gap-12 items-center shadow-[0px_0px_5px] flex justify-center p-8">
-            <AreaChart />
+            <ReactApexChart
+              options={areaChartData.options}
+              series={areaChartData.series}
+              type="area"
+              height={420}
+              width={950}
+            />
             <div className="flex items-center gap-[100px]">
               <div className=" rounded-lg p-4 border-slate-200">
                 <div className="pb-4 font-bold text-2xl">Expenses</div>

@@ -3,6 +3,9 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 
 export default function Menu() {
   const location = useLocation();
+  const today = new Date();
+  const yearMonth = today.toISOString().slice(0, 7);
+  console.log(yearMonth);
 
   const isActive = (basePath) => location.pathname.startsWith(basePath);
 
@@ -38,7 +41,7 @@ export default function Menu() {
             Budget Planning
           </Link>
           <Link
-            to="/menu/reports"
+            to={`/menu/reports/${yearMonth}`}
             className={`w-full pl-10 py-1 menu-elements ${
               isActive("/menu/reports") ? "active-element" : ""
             }`}

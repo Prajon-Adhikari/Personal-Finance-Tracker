@@ -117,7 +117,7 @@ export default function SignUp() {
           </div>
           <input
             type="submit"
-            className="border-2 text-xl py-2 px-4 mt-8 rounded-lg  bg-blue-400 w-full text-white"
+            className="border-2 text-xl py-2 cursor-pointer px-4 mt-8 rounded-lg  bg-blue-400 w-full text-white"
             value="Sign Up"
           />
           <div className="text-center pt-2">
