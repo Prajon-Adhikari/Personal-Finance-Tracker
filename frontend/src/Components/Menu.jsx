@@ -25,7 +25,7 @@ export default function Menu() {
             Dashboard
           </Link>
           <Link
-            to="/menu/transactions"
+            to={`/menu/transactions/${yearMonth}`}
             className={`w-full pl-10 py-1 menu-elements ${
               isActive("/menu/transactions") ? "active-element" : ""
             }`}

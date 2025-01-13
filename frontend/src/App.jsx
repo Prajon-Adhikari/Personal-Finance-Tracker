@@ -24,7 +24,7 @@ export default function App() {
         <Route path="/menu" element={<Menu />}>
           <Route index element={<Navigate to="menu/dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="transactions" element={<Transactions />} />
+          <Route path="transactions/:month" element={<Transactions />} />
           <Route path="budget" element={<Budget />} />
           <Route path="reports/:month" element={<Reports />} />
           <Route path="setting" element={<Setting />}>

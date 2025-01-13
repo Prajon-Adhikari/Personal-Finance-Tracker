@@ -1,102 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import AddTransactions from "./AddTransactions";
 import { MyContext } from "./MyContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Transactions() {
-  // Dummy Data for Transactions
-  const transactions = [
-    {
-      id: 1,
-      date: "01/01/2025",
-      description: "Groceries",
-      amount: -50.0,
-      category: "Shopping",
-    },
-    {
-      id: 2,
-      date: "01/02/2025",
-      description: "Freelance Payment",
-      amount: 500.0,
-      category: "Salary",
-    },
-    {
-      id: 3,
-      date: "01/03/2025",
-      description: "Electricity Bill",
-      amount: -120.0,
-      category: "Electricity",
-    },
-    {
-      id: 4,
-      date: "01/04/2025",
-      description: "Coffee",
-      amount: -5.5,
-      category: "Food",
-    },
-    {
-      id: 5,
-      date: "01/05/2025",
-      description: "Online Purchase",
-      amount: -200.0,
-      category: "Shopping",
-    },
-    {
-      id: 6,
-      date: "01/05/2025",
-      description: "Online Food",
-      amount: -200.0,
-      category: "Food",
-    },
-    {
-      id: 7,
-      date: "09/05/2025",
-      description: "Furniture Sales",
-      amount: 200.0,
-      category: "Sales",
-    },
-    {
-      id: 8,
-      date: "10/05/2025",
-      description: "Watch Movie",
-      amount: -200.0,
-      category: "Entertainment",
-    },
-    {
-      id: 9,
-      date: "01/05/2025",
-      description: "Health Checkup",
-      amount: -200.0,
-      category: "Health",
-    },
-    {
-      id: 10,
-      date: "01/06/2025",
-      description: "Salary",
-      amount: 200.0,
-      category: "Salary",
-    },
-    {
-      id: 11,
-      date: "01/06/2025",
-      description: "Donation",
-      amount: -200.0,
-      category: "Charity",
-    },
-  ];
+  const [transactions, setTransactions] = useState([]);
+  const navigate = useNavigate();
 
   const [type, setType] = useState("");
   const [showCategory, setShowCategory] = useState("");
   const [showAddTransactions, setShowAddTransactions] = useState(false);
+  const today = new Date();
+  const [currentMonth, setCurrentMonth] = useState(
+    today.toISOString().slice(0, 7)
+  );
+
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [maxMonth, setMaxMonth] = useState(currentMonth);
+
+  const handleMonthChange = (e) => {
+    const chosenMonth = e.target.value;
+    if (chosenMonth === "") {
+      setSelectedMonth(currentMonth);
+    } else {
+      setSelectedMonth(chosenMonth);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactionData(selectedMonth);
+    navigate(`/menu/transactions/${selectedMonth}`);
+    console.log(selectedMonth);
+  }, [selectedMonth]);
+
+  const fetchTransactionData = async (yearMonth) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/menu/transactions/${yearMonth}`
+      );
+      const data = await response.json();
+      setTransactions(data.transactions || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // Filter transactions by type and category
   const filteredTransactions = transactions.filter((transaction) => {
     const isTypeMatch = type
-      ? (type === "income" && transaction.amount > 0) ||
-        (type === "expenses" && transaction.amount < 0)
+      ? (type === "income" && transaction.transactionType === "income") ||
+        (type === "expenses" && transaction.transactionType === "expense")
       : true;
 
     const isCategoryMatch = showCategory
@@ -105,6 +62,10 @@ export default function Transactions() {
 
     return isTypeMatch && isCategoryMatch;
   });
+
+  const sortedTransactions = filteredTransactions.sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
 
   return (
     <>
@@ -193,7 +154,14 @@ export default function Transactions() {
               Expenses
             </button>
           </div>
-          <div>
+          <div className="flex gap-8">
+            <input
+              type="month"
+              className="border-2 px-4 py-1 rounded-lg border-black"
+              value={selectedMonth}
+              max={maxMonth}
+              onChange={handleMonthChange}
+            />
             <select
               name=""
               id=""
@@ -224,23 +192,27 @@ export default function Transactions() {
             </tr>
           </thead>
           <tbody>
-            {filteredTransactions.map((transaction) => (
-              <tr key={transaction.id} className="hover:bg-gray-100">
-                <td className="px-4 py-2 border">{transaction.date}</td>
-                <td className="px-4 py-2 border">{transaction.description}</td>
+            {sortedTransactions.map((transaction) => (
+              <tr key={transaction._id} className="hover:bg-gray-100">
+                <td className="px-4 py-2 border">
+                  {transaction.date.slice(0, 10)}
+                </td>
+                <td className="px-4 py-2 border">{transaction.title}</td>
                 <td
                   className={`px-4 py-2 border ${
-                    transaction.amount < 0 ? "text-red-500" : "text-green-500"
+                    transaction.transactionType === "expense"
+                      ? "text-red-500"
+                      : "text-green-500"
                   }`}
                 >
-                  {transaction.amount < 0
+                  {transaction.transactionType === "expense"
                     ? `-$${Math.abs(transaction.amount)}`
                     : `+$${transaction.amount}`}
                 </td>
                 <td className="text-center border">
                   <div
                     className={`${
-                      transaction.amount < 0
+                      transaction.transactionType === "expense"
                         ? "bg-red-500 text-white"
                         : "bg-green-500 text-white"
                     } my-2 mx-auto w-[120px] py-1 rounded-lg`}

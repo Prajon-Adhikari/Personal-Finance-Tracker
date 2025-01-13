@@ -2,17 +2,32 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import ReactApexChart from "react-apexcharts";
+import { useNavigate } from "react-router-dom";
 
 export default function Reports() {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(
     today.toISOString().slice(0, 7)
   );
+  const navigate = useNavigate();
+
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const [highestExpenseCategory, setHighestExpenseCategory] = useState("");
   const [highestIncomeWeek, setHighestIncomeWeek] = useState("");
   const [highestExpenseWeek, setHighestExpenseWeek] = useState("");
+
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [maxMonth, setMaxMonth] = useState(currentMonth);
+
+  const handleMonthChange = (e) => {
+    const chosenMonth = e.target.value;
+    if (chosenMonth === "") {
+      setSelectedMonth(currentMonth);
+    } else {
+      setSelectedMonth(chosenMonth);
+    }
+  };
 
   const [barChartData, setBarChartData] = useState({
     series: [],
@@ -82,11 +97,12 @@ export default function Reports() {
   });
 
   useEffect(() => {
-    fetchBarGraphData(currentMonth);
-    fetchAreaChartData(currentMonth);
-    fetchPieChartData(currentMonth);
-    console.log(currentMonth);
-  }, [currentMonth]);
+    navigate(`/menu/reports/${selectedMonth}`);
+    fetchBarGraphData(selectedMonth);
+    fetchAreaChartData(selectedMonth);
+    fetchPieChartData(selectedMonth);
+    console.log(selectedMonth);
+  }, [selectedMonth]);
 
   const fetchBarGraphData = async (month) => {
     try {
@@ -401,9 +417,9 @@ export default function Reports() {
           <input
             type="month"
             className="border-2 px-4 py-1 rounded-lg border-black"
-            value={currentMonth}
-            max={currentMonth}
-            onChange={(e) => setCurrentMonth(e.target.value)}
+            value={selectedMonth}
+            max={maxMonth}
+            onChange={handleMonthChange}
           />
           <button className="text-white py-1 px-4 rounded-lg text-lg font-semibold bg-black">
             Export
