@@ -123,7 +123,7 @@ export default function Reports() {
         curve: "straight",
       },
       title: {
-        text: "Product Trends by Month",
+        text: "Comparison between current and previous month transactions",
         align: "left",
       },
       grid: {
