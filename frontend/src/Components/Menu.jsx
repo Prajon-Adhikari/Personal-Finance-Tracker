@@ -5,7 +5,6 @@ export default function Menu() {
   const location = useLocation();
   const today = new Date();
   const yearMonth = today.toISOString().slice(0, 7);
-  console.log(yearMonth);
 
   const isActive = (basePath) => location.pathname.startsWith(basePath);
 

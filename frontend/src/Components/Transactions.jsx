@@ -236,7 +236,7 @@ export default function Transactions() {
       {showAddTransactions ? (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
           <MyContext.Provider value={{ setShowAddTransactions }}>
-            <AddTransactions />
+            <AddTransactions month={selectedMonth} />
           </MyContext.Provider>
         </div>
       ) : (

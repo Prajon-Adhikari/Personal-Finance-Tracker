@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function AddTransactions() {
+export default function AddTransactions(props) {
   const [fileName, setFileName] = useState("No file selected");
   const [isExpense, setIsExpense] = useState("");
   const [title, setTitle] = useState("");
@@ -39,7 +39,7 @@ export default function AddTransactions() {
         }
       );
       toast.success(data.message);
-      navigate("/menu/transactions");
+      navigate(`/menu/transactions/${props.month}`);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -61,7 +61,7 @@ export default function AddTransactions() {
         </button>
       </div>
       <form
-        action="/menu/transactions"
+        action={`/menu/transactions/${props.month}`}
         onSubmit={handleTransaction}
         method="POST"
         className="flex flex-col w-full gap-5"

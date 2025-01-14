@@ -9,6 +9,7 @@ export default function Reports() {
   const [currentMonth, setCurrentMonth] = useState(
     today.toISOString().slice(0, 7)
   );
+
   const navigate = useNavigate();
 
   const [totalIncome, setTotalIncome] = useState(0);
@@ -27,6 +28,12 @@ export default function Reports() {
     } else {
       setSelectedMonth(chosenMonth);
     }
+  };
+
+  const getPreviousMonth = (month) => {
+    const [year, monthIndex] = month.split("-").map(Number);
+    const previousMonthDate = new Date(year, monthIndex - 1);
+    return previousMonthDate.toISOString().slice(0, 7);
   };
 
   const [barChartData, setBarChartData] = useState({
@@ -49,6 +56,7 @@ export default function Reports() {
         "#000957",
         "#B03052",
         "#F95454",
+        "#FF6600",
         "#000000",
       ],
       dataLabels: { enabled: false },
@@ -70,14 +78,16 @@ export default function Reports() {
         "#000957",
         "#B03052",
         "#F95454",
+        "#FF6600",
         "#000000",
       ], // Custom colors
       labels: [
         "Food",
         "Shopping",
-        "Electricity",
         "Entertainment",
         "Health",
+        "Charity",
+        "Electricity",
         "Others",
       ],
       responsive: [
@@ -96,12 +106,46 @@ export default function Reports() {
     },
   });
 
+  const [lineChartData, setLineChartData] = useState({
+    series: [],
+    options: {
+      chart: {
+        height: 350,
+        type: "line",
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "straight",
+      },
+      title: {
+        text: "Product Trends by Month",
+        align: "left",
+      },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"], // alternating row colors
+          opacity: 0.5,
+        },
+      },
+      xaxis: {
+        categories: [],
+      },
+    },
+  });
+
   useEffect(() => {
     navigate(`/menu/reports/${selectedMonth}`);
+    const previousMonth = getPreviousMonth(selectedMonth);
+    console.log(previousMonth);
     fetchBarGraphData(selectedMonth);
     fetchAreaChartData(selectedMonth);
     fetchPieChartData(selectedMonth);
-    console.log(selectedMonth);
+    fetchLineGraphData(selectedMonth, previousMonth);
   }, [selectedMonth]);
 
   const fetchBarGraphData = async (month) => {
@@ -125,10 +169,8 @@ export default function Reports() {
         const amount = parseFloat(item.amount);
 
         if (item.transactionType === "income") {
-          console.log(amount);
           incomeData[weekIndex] += amount; // Accumulate income
         } else if (item.transactionType === "expense") {
-          console.log(item.amount);
           expenseData[weekIndex] += amount; // Accumulate expenses
         }
       });
@@ -236,6 +278,7 @@ export default function Reports() {
       const ElectricityData = [0, 0, 0, 0];
       const OtherData = [0, 0, 0, 0];
       const SalaryData = [0, 0, 0, 0];
+      const CharityData = [0, 0, 0, 0];
 
       // Aggregate data into weeks
       data.forEach((item) => {
@@ -254,6 +297,8 @@ export default function Reports() {
           EntertainmentData[weekIndex] += amount;
         } else if (item.category === "Health") {
           HealthData[weekIndex] += amount;
+        } else if (item.category === "Charity") {
+          CharityData[weekIndex] += amount;
         } else if (item.category === "Other") {
           OtherData[weekIndex] += amount;
         } else if (item.category === "Electricity") {
@@ -270,6 +315,7 @@ export default function Reports() {
         { name: "Shopping", data: ShoppingData },
         { name: "Entertainment", data: EntertainmentData },
         { name: "Health", data: HealthData },
+        { name: "Charity", data: CharityData },
         { name: "Electricity", data: ElectricityData },
         { name: "Others", data: OtherData },
       ];
@@ -279,6 +325,7 @@ export default function Reports() {
         { name: "Shopping", data: ShoppingData },
         { name: "Entertainment", data: EntertainmentData },
         { name: "Health", data: HealthData },
+        { name: "Charity", data: CharityData },
         { name: "Electricity", data: ElectricityData },
         { name: "Others", data: OtherData },
       ];
@@ -320,6 +367,7 @@ export default function Reports() {
       let EntertainmentData = 0;
       let HealthData = 0;
       let ElectricityData = 0;
+      let CharityData = 0;
       let OtherData = 0;
 
       data.forEach((item) => {
@@ -332,6 +380,8 @@ export default function Reports() {
           EntertainmentData += amount;
         } else if (item.category === "Health") {
           HealthData += amount;
+        } else if (item.category === "Charity") {
+          CharityData += amount;
         } else if (item.category === "Other") {
           OtherData += amount;
         } else if (item.category === "Electricity") {
@@ -344,6 +394,7 @@ export default function Reports() {
         ShoppingData,
         EntertainmentData,
         HealthData,
+        CharityData,
         ElectricityData,
         OtherData,
       ];
@@ -357,53 +408,141 @@ export default function Reports() {
     }
   };
 
-  const lineChartState = {
-    series: [
-      {
-        name: "Present Month",
-        data: [120, 40, 21, 35, 22, 30, 20],
-      },
-      {
-        name: "Previous Month", // New line series
-        data: [100, 30, 25, 22, 12, 35, 22], // Data for the new line
-      },
-    ],
-    options: {
-      chart: {
-        height: 350,
-        type: "line",
-        zoom: {
-          enabled: false,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: "straight",
-      },
-      title: {
-        text: "Product Trends by Month",
-        align: "left",
-      },
-      grid: {
-        row: {
-          colors: ["#f3f3f3", "transparent"], // alternating row colors
-          opacity: 0.5,
-        },
-      },
-      xaxis: {
-        categories: [
-          "Sales",
-          "Food",
-          "Shopping",
-          "Electricity",
-          "Entertainment",
-          "Health",
-          "Others",
+  const fetchLineGraphData = async (month, prevMonth) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/menu/reports/${month}`
+      );
+      const data = await response.json();
+
+      const prevRespnse = await fetch(
+        `http://localhost:8000/menu/reports/${prevMonth}`
+      );
+      const prevData = await prevRespnse.json();
+
+      const categories = [
+        "Sales",
+        "Salary",
+        "Food",
+        "Shopping",
+        "Entertainment",
+        "Health",
+        "Charity",
+        "Electricity",
+        "Others",
+      ];
+
+      let SalesData = 0;
+      let SalaryData = 0;
+      let FoodData = 0;
+      let ShoppingData = 0;
+      let EntertainmentData = 0;
+      let HealthData = 0;
+      let ElectricityData = 0;
+      let CharityData = 0;
+      let OtherData = 0;
+
+      data.forEach((item) => {
+        const amount = parseFloat(item.amount);
+        if (item.category === "Food") {
+          FoodData += amount;
+        } else if (item.category === "Shopping") {
+          ShoppingData += amount;
+        } else if (item.category === "Sales") {
+          SalesData += amount;
+        } else if (item.category === "Salary") {
+          SalaryData += amount;
+        } else if (item.category === "Entertainment") {
+          EntertainmentData += amount;
+        } else if (item.category === "Health") {
+          HealthData += amount;
+        } else if (item.category === "Charity") {
+          CharityData += amount;
+        } else if (item.category === "Other") {
+          OtherData += amount;
+        } else if (item.category === "Electricity") {
+          ElectricityData += amount;
+        }
+      });
+
+      const expenseSeries = [
+        SalesData,
+        SalaryData,
+        FoodData,
+        ShoppingData,
+        EntertainmentData,
+        HealthData,
+        CharityData,
+        ElectricityData,
+        OtherData,
+      ];
+
+      let prevSalesData = 0;
+      let prevSalaryData = 0;
+      let prevFoodData = 0;
+      let prevShoppingData = 0;
+      let prevEntertainmentData = 0;
+      let prevHealthData = 0;
+      let prevElectricityData = 0;
+      let prevCharityData = 0;
+      let prevOtherData = 0;
+
+      prevData.forEach((item) => {
+        const prevAmount = parseFloat(item.amount);
+        if (item.category === "Food") {
+          prevFoodData += prevAmount;
+        } else if (item.category === "Sales") {
+          prevSalesData += prevAmount;
+        } else if (item.category === "Salary") {
+          prevSalaryData += prevAmount;
+        } else if (item.category === "Shopping") {
+          prevShoppingData += prevAmount;
+        } else if (item.category === "Entertainment") {
+          prevEntertainmentData += prevAmount;
+        } else if (item.category === "Health") {
+          prevHealthData += prevAmount;
+        } else if (item.category === "Charity") {
+          prevCharityData += prevAmount;
+        } else if (item.category === "Other") {
+          prevOtherData += prevAmount;
+        } else if (item.category === "Electricity") {
+          prevElectricityData += prevAmount;
+        }
+      });
+
+      const prevExpenseSeries = [
+        prevSalesData,
+        prevSalaryData,
+        prevFoodData,
+        prevShoppingData,
+        prevEntertainmentData,
+        prevHealthData,
+        prevCharityData,
+        prevElectricityData,
+        prevOtherData,
+      ];
+
+      console.log(expenseSeries);
+      console.log(prevExpenseSeries);
+      setLineChartData({
+        series: [
+          {
+            name: "Current Month",
+            data: expenseSeries,
+          },
+          {
+            name: "Previous Month",
+            data: prevExpenseSeries,
+          },
         ],
-      },
-    },
+        options: {
+          ...lineChartData.options, // Spread the existing options
+          xaxis: { categories: categories },
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -429,7 +568,7 @@ export default function Reports() {
           <div className="w-[420px] p-6 rounded-md shadow-[0px_0px_5px] border-slate-300">
             <div className="flex justify-between items-center">
               <div className="font-bold text-3xl">Monthly Analysis</div>
-              <div className="font-medium text-lg">{currentMonth}</div>
+              <div className="font-medium text-lg">{selectedMonth}</div>
             </div>
             <div className="font-semibold text-2xl pt-2 pb-6">Summary</div>
             <div className="py-4 font-medium text-lg">
@@ -543,8 +682,8 @@ export default function Reports() {
           <div className="shadow-[0px_0px_5px] flex flex-col justify-center my-10 rounded-md px-10 py-6">
             <div className="flex justify-center">
               <ReactApexChart
-                options={lineChartState.options}
-                series={lineChartState.series}
+                options={lineChartData.options}
+                series={lineChartData.series}
                 type="line"
                 height={420}
                 width={900}
