@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import ReactApexChart from "react-apexcharts";
@@ -74,6 +74,11 @@ class AreaChart extends React.Component {
 }
 
 export default function Dashboard() {
+  const today = new Date();
+  const yearMonth = today.toISOString().slice(0, 7);
+
+  const [transactions, setTransactions] = useState([]);
+
   const [pieChartState, setPieChartState] = useState({
     series: [44, 55, 20],
     options: {
@@ -98,44 +103,16 @@ export default function Dashboard() {
     },
   });
 
-  // Dummy Data for Transactions
-  const transactions = [
-    {
-      id: 1,
-      date: "01/01/2025",
-      description: "Groceries",
-      amount: -50.0,
-      category: "Shopping",
-    },
-    {
-      id: 2,
-      date: "01/02/2025",
-      description: "Freelance Payment",
-      amount: 500.0,
-      category: "Salary",
-    },
-    {
-      id: 3,
-      date: "01/03/2025",
-      description: "Electricity Bill",
-      amount: -120.0,
-      category: "Electricity",
-    },
-    {
-      id: 4,
-      date: "01/04/2025",
-      description: "Coffee",
-      amount: -5.5,
-      category: "Food",
-    },
-    {
-      id: 5,
-      date: "01/05/2025",
-      description: "Online Purchase",
-      amount: -200.0,
-      category: "Shopping",
-    },
-  ];
+  useEffect(() => {
+    fetchTransactionData();
+  }, []);
+
+  const fetchTransactionData = async () => {
+    const response = await fetch("http://localhost:8000/menu/dashboard");
+    const data = await response.json();
+
+    setTransactions(data.transactions);
+  };
 
   return (
     <div className="w-full">
@@ -216,7 +193,7 @@ export default function Dashboard() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-semibold mb-4">Recent Transactions</h3>
           <button className="bg-red-700 px-4 py-1 rounded-lg mr-2 mb-2 text-white">
-            <Link to="/menu/transactions">View All</Link>
+            <Link to={`/menu/transactions/${yearMonth}`}>View All</Link>
           </button>
         </div>
         <table className="w-full text-left border-collapse">
@@ -230,21 +207,25 @@ export default function Dashboard() {
           </thead>
           <tbody>
             {transactions.map((transaction) => (
-              <tr key={transaction.id} className="hover:bg-gray-100">
-                <td className="px-4 py-2 border">{transaction.date}</td>
-                <td className="px-4 py-2 border">{transaction.description}</td>
+              <tr key={transaction._id} className="hover:bg-gray-100">
+                <td className="px-4 py-2 border">
+                  {transaction.date.slice(0, 10)}
+                </td>
+                <td className="px-4 py-2 border">{transaction.title}</td>
                 <td
                   className={`px-4 py-2 border ${
-                    transaction.amount < 0 ? "text-red-500" : "text-green-500"
+                    transaction.transactionType === "expense"
+                      ? "text-red-500"
+                      : "text-green-500"
                   }`}
                 >
-                  {transaction.amount < 0
+                  {transaction.transactionType === "expense"
                     ? `-$${Math.abs(transaction.amount)}`
                     : `+$${transaction.amount}`}
                 </td>
-                {transaction.amount < 0 ? (
+                {transaction.transactionType === "expense" ? (
                   <td className="text-center border">
-                    <div className="bg-red-500 text-white my-2 mx-auto w-[120px] py-1 rounded-lg">
+                    <div className="bg-red-500 text-white my-2 mx-auto w-[140px] py-1 rounded-lg">
                       {transaction.category === "Shopping" ? (
                         <FontAwesomeIcon
                           icon={faCartShopping}
@@ -257,17 +238,14 @@ export default function Dashboard() {
                       ) : transaction.category === "Electricity" ? (
                         <FontAwesomeIcon icon={faBolt} className="pr-2" />
                       ) : (
-                        <FontAwesomeIcon
-                          icon={faCartShopping}
-                          className="pr-2"
-                        />
+                        <FontAwesomeIcon icon={faDollarSign} className="pr-2" />
                       )}
                       {transaction.category}
                     </div>
                   </td>
                 ) : (
                   <td className="text-center border">
-                    <div className="bg-green-500 text-white  my-2 mx-auto w-[120px] py-1 rounded-lg">
+                    <div className="bg-green-500 text-white  my-2 mx-auto w-[140px] py-1 rounded-lg">
                       {transaction.category === "Shopping" ? (
                         <FontAwesomeIcon
                           icon={faCartShopping}
