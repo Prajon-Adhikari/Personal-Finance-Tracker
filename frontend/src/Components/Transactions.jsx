@@ -6,6 +6,7 @@ import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import AddTransactions from "./AddTransactions";
 import { MyContext } from "./MyContext";
 import { useNavigate } from "react-router-dom";
+import { parse } from "@fortawesome/fontawesome-svg-core";
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -21,6 +22,9 @@ export default function Transactions() {
 
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [maxMonth, setMaxMonth] = useState(currentMonth);
+  const [totalIncome, setTotalIncome] = useState("");
+  const [totalExpense, setTotalExpense] = useState("");
+  const [transactionCount, setTransactionCount] = useState("");
 
   const handleMonthChange = (e) => {
     const chosenMonth = e.target.value;
@@ -34,7 +38,6 @@ export default function Transactions() {
   useEffect(() => {
     fetchTransactionData(selectedMonth);
     navigate(`/menu/transactions/${selectedMonth}`);
-    console.log(selectedMonth);
   }, [selectedMonth]);
 
   const fetchTransactionData = async (yearMonth) => {
@@ -43,7 +46,24 @@ export default function Transactions() {
         `http://localhost:8000/menu/transactions/${yearMonth}`
       );
       const data = await response.json();
-      setTransactions(data.transactions || []);
+      const transactions = data.transactions || [];
+      setTransactions(transactions);
+
+      let finalIncome = 0;
+      let finalExpense = 0;
+
+      transactions.forEach((item) => {
+        let amount = parseFloat(item.amount);
+        if (item.transactionType === "income") {
+          finalIncome += amount;
+        } else {
+          finalExpense += amount;
+        }
+      });
+
+      setTotalIncome(finalIncome);
+      setTotalExpense(finalExpense);
+      setTransactionCount(transactions.length);
     } catch (error) {
       console.log(error);
     }
@@ -80,19 +100,23 @@ export default function Transactions() {
             Current Status
           </legend>
           <div className="py-7 pl-6 pr-[70px]">
-            <div className="font-bold text-3xl ">$2000.45</div>
+            <div className="font-bold text-3xl ">
+              ${totalIncome - totalExpense}
+            </div>
             <div className="text-gray-600">Current balance status </div>
           </div>
         </fieldset>
         <fieldset className="border-2 border-gray-500 rounded-xl">
-          <legend className="ml-4 text-xl px-1 text-gray-600">per year</legend>
+          <legend className="ml-4 text-xl px-1 text-gray-600">
+            this month
+          </legend>
           <div className="flex gap-10 py-7 px-8">
             <div className="text-green-500 flex items-center">
               <FontAwesomeIcon icon={faArrowUp} className="text-[40px]" />
               <div>
                 <div className="text-center">Income</div>
                 <div className="text-2xl font-semibold text-center">
-                  +$ 700,892{" "}
+                  +$ {totalIncome}
                 </div>
               </div>
             </div>
@@ -101,13 +125,15 @@ export default function Transactions() {
               <div>
                 <div className="text-center">Expenses</div>
                 <div className="text-2xl font-semibold text-center">
-                  -$ 680,892{" "}
+                  -$ {totalExpense}
                 </div>
               </div>
             </div>
             <div className="text-blue-400 border-l-2 px-6 border-gray-500">
               <div className="text-center">Count</div>
-              <div className="text-2xl font-semibold text-center">15</div>
+              <div className="text-2xl font-semibold text-center">
+                {transactionCount}
+              </div>
             </div>
           </div>
         </fieldset>
