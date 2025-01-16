@@ -13,80 +13,71 @@ import {
   faDollarSign,
 } from "@fortawesome/free-solid-svg-icons";
 
-class AreaChart extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      series: [
-        {
-          name: "Income",
-          data: [31, 40, 28, 51, 42, 109, 100],
-        },
-        {
-          name: "Expenses",
-          data: [11, 32, 45, 32, 34, 52, 41],
-        },
-      ],
-      options: {
-        chart: {
-          height: 300,
-          type: "area",
-        },
-        colors: ["#88D66C", "#F95454"],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: "smooth",
-        },
-        xaxis: {
-          type: "datetime",
-          categories: [
-            "2025-01-01T00:00:00.000Z",
-            "2025-02-01T00:00:00.000Z",
-            "2025-03-01T00:00:00.000Z",
-            "2025-04-01T00:00:00.000Z",
-            "2025-05-01T00:00:00.000Z",
-            "2025-06-01T00:00:00.000Z",
-            "2025-07-01T00:00:00.000Z",
-          ],
-        },
-        tooltip: {
-          x: {
-            format: "MMM yyyy",
-          },
-        },
-      },
-    };
-  }
-
-  render() {
-    return (
-      <ReactApexChart
-        options={this.state.options}
-        series={this.state.series}
-        type="area"
-        height={300}
-        width={460}
-      />
-    );
-  }
-}
-
 export default function Dashboard() {
   const today = new Date();
   const yearMonth = today.toISOString().slice(0, 7);
 
   const [transactions, setTransactions] = useState([]);
+  const [finalIncome, setFinalIncome] = useState("");
+  const [finalExpense, setFinalExpense] = useState("");
+  const [transactionCount, setTransactionCount] = useState("");
 
-  const [pieChartState, setPieChartState] = useState({
-    series: [44, 55, 20],
+  const [areaChartData, setAreaChartData] = useState({
+    series: [],
+    options: {
+      chart: {
+        height: 300,
+        type: "area",
+        zoom: { enabled: false },
+      },
+      colors: ["#88D66C", "#F75454"],
+      dataLabels: { enabled: false },
+      stroke: { curve: "smooth", width: 4 },
+      fill: { opacity: 0.3 },
+      xaxis: {
+        categories: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+      },
+      tooltip: { enabled: true },
+    },
+  });
+
+  const [pieChartData, setPieChartData] = useState({
+    series: [],
     options: {
       chart: {
         type: "pie",
       },
-      colors: ["#FF407D", "#6C48C5", "#FAB12F"], // Custom colors
-      labels: ["Food", "Shopping", "Others"],
+      colors: [
+        "#FF9100",
+        "#914F1E",
+        "#000957",
+        "#B03052",
+        "#F95454",
+        "#FF6600",
+        "#000000",
+      ], // Custom colors
+      labels: [
+        "Food",
+        "Shopping",
+        "Entertainment",
+        "Health",
+        "Charity",
+        "Electricity",
+        "Others",
+      ],
       responsive: [
         {
           breakpoint: 480,
@@ -111,7 +102,77 @@ export default function Dashboard() {
     const response = await fetch("http://localhost:8000/menu/dashboard");
     const data = await response.json();
 
-    setTransactions(data.transactions);
+    let FoodData = 0;
+    let ShoppingData = 0;
+    let EntertainmentData = 0;
+    let HealthData = 0;
+    let ElectricityData = 0;
+    let CharityData = 0;
+    let OtherData = 0;
+
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    let income = Array(12).fill(0);
+    let expense = Array(12).fill(0);
+
+    data.transactions.map((item) => {
+      const date = new Date(item.date);
+      const monthIndex = date.getMonth();
+
+      const amount = parseFloat(item.amount);
+      if (item.category === "Food") {
+        FoodData += amount;
+      } else if (item.category === "Shopping") {
+        ShoppingData += amount;
+      } else if (item.category === "Entertainment") {
+        EntertainmentData += amount;
+      } else if (item.category === "Health") {
+        HealthData += amount;
+      } else if (item.category === "Charity") {
+        CharityData += amount;
+      } else if (item.category === "Electricity") {
+        ElectricityData += amount;
+      } else if (item.category === "Other") {
+        OtherData += amount;
+      }
+
+      if (item.transactionType === "income") {
+        totalIncome += amount;
+        income[monthIndex] += amount;
+      } else if (item.transactionType === "expense") {
+        totalExpense += amount;
+        expense[monthIndex] += amount;
+      }
+    });
+
+    const expenseSeries = [
+      FoodData,
+      ShoppingData,
+      EntertainmentData,
+      HealthData,
+      CharityData,
+      ElectricityData,
+      OtherData,
+    ];
+
+    const areaChartSeries = [
+      { name: "Income", data: income },
+      { name: "Expense", data: expense },
+    ];
+
+    setFinalIncome(totalIncome);
+    setFinalExpense(totalExpense);
+    setTransactionCount(data.transactions.length);
+    setPieChartData((prevState) => ({
+      ...prevState,
+      series: expenseSeries,
+    }));
+    setAreaChartData((prevState) => ({
+      ...prevState,
+      series: areaChartSeries,
+    }));
+    setTransactions(data.recentTransactions);
   };
 
   return (
@@ -128,24 +189,30 @@ export default function Dashboard() {
               <div className="text-gray-400">Overview of your stats</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">$ 3445.78</div>
-              <div className="text-gray-400">Total earnings this month</div>
+              <div className="text-3xl font-bold">$ {finalIncome}</div>
+              <div className="text-gray-400">Total earnings this year</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">82</div>
+              <div className="text-3xl font-bold">{transactionCount}</div>
               <div className="text-gray-400">Transactions processed</div>
             </div>
             <button className="bg-pink-600 rounded text-white py-2">
               Look Summary
             </button>
           </div>
-          <AreaChart />
+          <ReactApexChart
+            options={areaChartData.options}
+            series={areaChartData.series}
+            type="area"
+            height={420}
+            width={450}
+          />
         </div>
         <div className="bg-white rounded-xl flex justify-center flex-col px-6 shadow-lg">
           <div className="pb-4 font-bold text-2xl">Expenses</div>
           <ReactApexChart
-            options={pieChartState.options}
-            series={pieChartState.series}
+            options={pieChartData.options}
+            series={pieChartData.series}
             type="pie"
             width={360}
           />
@@ -155,8 +222,8 @@ export default function Dashboard() {
         <Panel
           title="Total Earning"
           figure={faChartSimple}
-          amount="4000.8"
-          date="Jan01- Jan29"
+          amount={`${finalIncome}`}
+          date="Jan01- Dec-31"
           begColor="from-pink-500"
           midColor="via-pink-600"
           endColor="to-pink-700"
@@ -164,8 +231,8 @@ export default function Dashboard() {
         <Panel
           title="Total Expenses"
           figure={faChartSimple}
-          amount="4000.8"
-          date="Jan01- Jan29"
+          amount={`${finalExpense}`}
+          date="Jan01- Dec31"
           begColor="from-customPurple1"
           midColor="via-customBlue"
           endColor="to-customBlue1"
@@ -173,8 +240,8 @@ export default function Dashboard() {
         <Panel
           title="Total Earning"
           figure={faChartSimple}
-          amount="4000.8"
-          date="Jan01- Jan29"
+          amount={`${finalIncome}`}
+          date="Jan01- De31"
           begColor="from-customTeal"
           midColor="via-customTeal1"
           endColor="to-customTeal3"
@@ -182,8 +249,8 @@ export default function Dashboard() {
         <Panel
           title="Total Earning"
           figure={faChartSimple}
-          amount="4000.8"
-          date="Jan01- Jan29"
+          amount={`${finalIncome}`}
+          date="Jan01- Dec31"
           begColor="from-customGold"
           midColor="via-customGold1"
           endColor="to-customGold2"

@@ -11,9 +11,6 @@ router.get("/:yearMonth", async (req, res) => {
     endDate.setMonth(startDate.getMonth() + 1);
     endDate.setDate(0); // Set the date to the last day of the previous month (which is the correct last day of the target month)
 
-    console.log("Start Date:", startDate);
-    console.log("End Date:", endDate);
-
     const transactions = await Transaction.find({
       date: {
         $gte: startDate, // Start of the given month

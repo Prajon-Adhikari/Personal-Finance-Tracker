@@ -6,7 +6,6 @@ import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import AddTransactions from "./AddTransactions";
 import { MyContext } from "./MyContext";
 import { useNavigate } from "react-router-dom";
-import { parse } from "@fortawesome/fontawesome-svg-core";
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
