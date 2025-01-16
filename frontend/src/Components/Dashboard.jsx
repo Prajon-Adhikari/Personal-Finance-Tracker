@@ -28,7 +28,6 @@ export default function Dashboard() {
       chart: {
         height: 300,
         type: "area",
-        zoom: { enabled: false },
       },
       colors: ["#88D66C", "#F75454"],
       dataLabels: { enabled: false },
