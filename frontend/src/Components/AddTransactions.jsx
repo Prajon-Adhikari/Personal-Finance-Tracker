@@ -21,12 +21,12 @@ export default function AddTransactions(props) {
     setFileName(file?.name || "No file selected"); // Display file name
     setBill(file); // Update bill state with the file object
   };
+  const { setShowAddTransactions } = useContext(MyContext);
 
   const navigate = useNavigate();
 
   const handleTransaction = async (e) => {
     e.preventDefault();
-    console.log(transactionType);
     try {
       const { data } = await axios.post(
         "http://localhost:8000/menu/transactions",
@@ -40,12 +40,12 @@ export default function AddTransactions(props) {
       );
       toast.success(data.message);
       navigate(`/menu/transactions/${props.month}`);
+      setShowAddTransactions(false);
     } catch (error) {
       toast.error(error.response.data.message);
     }
   };
 
-  const { setShowAddTransactions } = useContext(MyContext);
   return (
     <div className="w-[500px] bg-white mb-10 px-10 pt-6 pb-10 shadow-sm rounded-xl">
       <div className="mb-8 flex justify-between items-center">
