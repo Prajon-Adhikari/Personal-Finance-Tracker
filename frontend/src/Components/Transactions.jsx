@@ -163,7 +163,9 @@ export default function Transactions() {
         <div className="mb-6 flex justify-between mr-10 ">
           <div className="flex gap-4">
             <button
-              onClick={() => setType("income")}
+              onClick={() =>
+                type === "income" ? setType("") : setType("income")
+              }
               className={`border-2 border-green-500 text-green-500 px-4 py-1 rounded-md ${
                 type === "income" ? "income-clicked" : ""
               }`}
@@ -171,7 +173,9 @@ export default function Transactions() {
               Income
             </button>
             <button
-              onClick={() => setType("expenses")}
+              onClick={() =>
+                type === "expenses" ? setType("") : setType("expenses")
+              }
               className={`border-2 border-red-500 text-red-500 px-4 py-1 rounded-md ${
                 type === "expenses" ? "expense-clicked" : ""
               }`}
@@ -246,10 +250,10 @@ export default function Transactions() {
                   </div>
                 </td>
                 <td className="py-3 border flex gap-3 justify-center  ">
-                  <div className="bg-blue-400 text-white py-1 px-2 rounded">
+                  <div className="bg-blue-400 text-white py-1 px-2 rounded cursor-pointer">
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </div>
-                  <div className="bg-red-400 text-white py-1 px-2 rounded">
+                  <div className="bg-red-400 text-white py-1 px-2 rounded cursor-pointer">
                     <FontAwesomeIcon icon={faTrash} />
                   </div>
                 </td>
