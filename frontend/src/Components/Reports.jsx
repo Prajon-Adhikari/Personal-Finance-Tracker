@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import ReactApexChart from "react-apexcharts";
 import { useNavigate } from "react-router-dom";
 
@@ -547,9 +547,12 @@ export default function Reports() {
 
   return (
     <>
-      <div className="bg-white flex justify-between items-center px-10 w-full h-[70px]">
+      <div className="bg-white flex rounded-bl-xl justify-between items-center px-10 w-full h-[70px]">
         <h2 className="text-2xl font-bold">REPORTS</h2>
-        <FontAwesomeIcon icon={faUser} />
+        <FontAwesomeIcon
+          className="bg-slate-200 text-gray-500 cursor-pointer px-[12px] py-[10px] mr-4 text-xl rounded-full "
+          icon={faUser}
+        />
       </div>
       <div className="bg-white min-h-[700px] mt-4 px-12 py-8 rounded-lg">
         <div className="flex justify-end gap-8">

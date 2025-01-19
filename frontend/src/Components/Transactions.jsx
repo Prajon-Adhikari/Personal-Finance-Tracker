@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import AddTransactions from "./AddTransactions";
 import { MyContext } from "./MyContext";
 import { useNavigate } from "react-router-dom";
+import EditTransactions from "./EditTransactions";
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -88,10 +89,12 @@ export default function Transactions() {
 
   return (
     <>
-      <div className="bg-white flex justify-between items-center px-10 w-full h-[70px]">
+      <div className="bg-white flex rounded-bl-xl justify-between items-center px-10 w-full h-[70px]">
         <h2 className="text-2xl font-bold">TRANSACTIONS</h2>
-        <FontAwesomeIcon icon={faUser} />
-      </div>
+<FontAwesomeIcon
+          className="bg-slate-200 text-gray-500 cursor-pointer px-[12px] py-[10px] mr-4 text-xl rounded-full "
+          icon={faUser}
+        />      </div>
 
       <div className="flex gap-10 mx-10 my-6 items-center">
         <fieldset className="border-2 border-gray-500 rounded-xl">

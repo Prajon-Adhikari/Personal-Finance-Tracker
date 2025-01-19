@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import ReactApexChart from "react-apexcharts";
 import { Link } from "react-router-dom";
 import Panel from "./Panel";
@@ -176,10 +176,12 @@ export default function Dashboard() {
 
   return (
     <div className="w-full">
-      <div className="bg-white flex justify-between items-center px-10 w-full h-[70px]">
+      <div className="bg-white flex rounded-bl-xl justify-between items-center px-10 w-full h-[70px]">
         <h2 className="text-2xl text-slate-600 font-bold">DASHBOARD</h2>
-        <FontAwesomeIcon icon={faUser} />
-      </div>
+<FontAwesomeIcon
+          className="bg-slate-200 text-gray-500 cursor-pointer px-[12px] py-[10px] mr-4 text-xl rounded-full "
+          icon={faUser}
+        />      </div>
       <div className="flex gap-6 mt-4">
         <div className="w-[780px] p-6 flex justify-between rounded-xl bg-white shadow-lg">
           <div className="flex flex-col gap-8">
