@@ -2,9 +2,10 @@ import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { MyContext } from "./MyContext";
-import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function AddTransactions(props) {
   const [fileName, setFileName] = useState("No file selected");
@@ -38,11 +39,31 @@ export default function AddTransactions(props) {
           withCredentials: true,
         }
       );
-      toast.success(data.message);
+      toast.success("Successfully transaction added!", {
+        position: "top-center",
+        autoClose: 800,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       navigate(`/menu/transactions/${props.month}`);
       setShowAddTransactions(false);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error("Transaction cannot be added", {
+        position: "top-center",
+        autoClose: 800,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
