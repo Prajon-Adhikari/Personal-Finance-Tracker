@@ -1,7 +1,10 @@
 const express = require("express");
 const User = require("../models/user.js");
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
+
+const secretKey = "mySecretKey";
 
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
@@ -17,28 +20,19 @@ router.post("/signin", async (req, res) => {
       return res.status(401).json({ message: "Incorrect Password" });
     }
 
+    const token = jwt.sign({ id: user._id, email: user.email }, secretKey, {
+      expiresIn: "1h",
+    });
+
     return res.status(200).json({
       message: "Sign In successfully",
+      token,
+      user,
     });
   } catch (error) {
     return res.status(500).json("Error:", error);
   }
 });
-
-const userMiddleWare = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User Not Found" });
-    }
-    req.user = user;
-    next();
-  } catch (error) {
-    return res.status(500).json({ message: "Error retrieving user details" });
-  }
-};
 
 router.post("/signup", async (req, res) => {
   const { fullName, email, password, mobile } = req.body;
@@ -50,11 +44,30 @@ router.post("/signup", async (req, res) => {
       mobile,
     });
     console.log(user);
-    return res.status(200).json({ message: "User register successfully" });
+    return res
+      .status(200)
+      .json({ message: "User register successfully", token });
   } catch (error) {
     console.log("Error: Unsuccessfull registration", error);
     return res.status(500).json({ message: "Unsuccessfull Registration" });
   }
 });
 
-module.exports = router;
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  console.log(token);
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized access" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(500).json({ message: "Invalid or expired token" });
+  }
+};
+
+module.exports = { router, verifyToken };

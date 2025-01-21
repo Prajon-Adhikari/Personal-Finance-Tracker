@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { MyContext } from "./MyContext";
 
 export default function MyProfile() {
+  const { user } = useContext(MyContext);
   return (
     <div className="w-full">
       <div className="font-bold text-2xl ml-2">My Profile</div>
@@ -15,9 +17,9 @@ export default function MyProfile() {
             className="border-2 text-[60px] px-7 py-6 rounded-full border-slate-300 bg-gray-300 text-gray-500"
           />
           <div>
-            <div className="font-bold text-2xl">Prajon Adhikari</div>
-            <div>Team Manager</div>
-            <div>Bharatpuur, Chitwan</div>
+            <div className="font-bold text-2xl">{user.fullName}</div>
+            <div>{user.bio === "" ? " - " : user.bio}</div>
+            <div>{user.city === "" ? " - " : user.city}</div>
           </div>
         </div>
         <div className="flex gap-2 items-center border-slate-300 text-xl border-2  px-6 py-2 rounded-full">
@@ -38,21 +40,21 @@ export default function MyProfile() {
         <div className="mt-8 flex flex-col gap-10">
           <div>
             <div className="font-semibold text-lg">Full Name </div>
-            <div>Prajon Adhikari</div>
+            <div>{user.fullName}</div>
           </div>
           <div className="flex gap-[160px]">
             <div>
               <div className="font-semibold text-lg">Email </div>
-              <div>prajon@gmail.com</div>
+              <div>{user.email}</div>
             </div>
             <div>
               <div className="font-semibold text-lg">Mobile Number </div>
-              <div>9876543210</div>
+              <div>{user.mobile}</div>
             </div>
           </div>
           <div>
             <div className="font-semibold text-lg">Bio </div>
-            <div>Team Manager</div>
+            <div>{user.bio === "" ? " - " : user.bio}</div>
           </div>
         </div>
       </div>
@@ -70,16 +72,16 @@ export default function MyProfile() {
           <div className="flex gap-[160px]">
             <div>
               <div className="font-semibold text-lg">Country</div>
-              <div>Nepal</div>
+              <div>{user.country === "" ? " - " : user.country}</div>
             </div>
             <div>
               <div className="font-semibold text-lg">City/State</div>
-              <div>Bharatpur, Chitwan</div>
+              <div>{user.city === "" ? " - " : user.city}</div>
             </div>
           </div>
           <div>
             <div className="font-semibold text-lg">Postal Code</div>
-            <div>98098</div>
+            <div>{user.postalCode === "" ? " - " : user.postalCode}</div>
           </div>
         </div>
       </div>

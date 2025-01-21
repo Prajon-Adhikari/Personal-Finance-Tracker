@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { MyContext } from "./MyContext";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const { user, setUser } = useContext(MyContext);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -16,12 +18,20 @@ export default function SignIn() {
         email,
         password,
       });
+      console.log(data);
       toast.success(data.message);
-      navigate("/menu/dashboard");
+      const user = data.user;
+      navigate("/menu/dashboard", { state: { user } });
+      setUser(data.user);
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response) {
+        toast.error(error.response.data.message); // Access message from error response
+      } else {
+        toast.error("An unexpected error occurred"); // Handle unexpected errors
+      }
     }
   };
+
 
   return (
     <div className="flex">

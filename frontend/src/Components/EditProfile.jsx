@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { MyContext } from "./MyContext";
 
 export default function EditProfile() {
   const [fullName, setFullName] = useState("");
@@ -11,13 +12,14 @@ export default function EditProfile() {
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
 
-  const fetchUserData = async () => {
-    const response = await fetch(
-      "http://localhost:8000/menu/setting/myprofile/edit"
-    );
-    const data = await response.json();
+  const { user } = useContext(MyContext);
+  console.log(user);
 
-    console.log(data.user);
+  const fetchUserData = () => {
+    // const response = await fetch(
+    //   "http://localhost:8000/menu/setting/myprofile/edit"
+    // );
+    // const data = await response.json();
   };
   return (
     <div>
