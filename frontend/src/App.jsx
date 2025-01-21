@@ -13,6 +13,7 @@ import MyProfile from "./Components/MyProfile";
 import Notifications from "./Components/Notifications";
 import DataExport from "./Components/DataExport";
 import DeleteAccount from "./Components/DeleteAccount";
+import EditProfile from "./Components/EditProfile";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
             <Route path="dataexport" element={<DataExport />} />
             <Route path="deleteaccount" element={<DeleteAccount />} />
           </Route>
+          <Route path="setting/myprofile/edit" element={<EditProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>

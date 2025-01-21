@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 export default function MyProfile() {
   return (
@@ -28,8 +29,10 @@ export default function MyProfile() {
         <div className="flex justify-between">
           <div className="font-semibold text-2xl">Personal Information</div>
           <button className="flex gap-2 items-center border-slate-300 text-xl border-2  px-4 py-1 rounded-full">
-            <button>Edit</button>
-            <FontAwesomeIcon icon={faPen} />
+            <Link to="edit">
+              <button className="pr-2">Edit</button>
+              <FontAwesomeIcon icon={faPen} />
+            </Link>
           </button>
         </div>
         <div className="mt-8 flex flex-col gap-10">
@@ -57,8 +60,10 @@ export default function MyProfile() {
         <div className="flex justify-between">
           <div className="font-semibold text-2xl">Address Information</div>
           <button className="flex gap-2 items-center border-slate-300 text-xl border-2  px-4 py-1 rounded-full">
-            <button>Edit</button>
-            <FontAwesomeIcon icon={faPen} />
+            <Link to="edit">
+              <button className="pr-2">Edit</button>
+              <FontAwesomeIcon icon={faPen} />
+            </Link>
           </button>
         </div>
         <div className="mt-8 flex flex-col gap-10">

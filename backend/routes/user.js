@@ -25,6 +25,21 @@ router.post("/signin", async (req, res) => {
   }
 });
 
+const userMiddleWare = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(500).json({ message: "Error retrieving user details" });
+  }
+};
+
 router.post("/signup", async (req, res) => {
   const { fullName, email, password, mobile } = req.body;
   try {
