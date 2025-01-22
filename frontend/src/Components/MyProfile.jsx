@@ -1,12 +1,45 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { MyContext } from "./MyContext";
 
 export default function MyProfile() {
-  const { user } = useContext(MyContext);
+  const [user, setUser] = useState(null);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/menu/setting/myprofile",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+          console.log(data.user);
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-full">
       <div className="font-bold text-2xl ml-2">My Profile</div>
@@ -18,8 +51,8 @@ export default function MyProfile() {
           />
           <div>
             <div className="font-bold text-2xl">{user.fullName}</div>
-            <div>{user.bio === "" ? " - " : user.bio}</div>
-            <div>{user.city === "" ? " - " : user.city}</div>
+            <div>{user.bio === undefined ? ` - ` : `${user.bio}`}</div>
+            <div>{user.city === undefined ? ` - ` : `${user.city}`}</div>
           </div>
         </div>
         <div className="flex gap-2 items-center border-slate-300 text-xl border-2  px-6 py-2 rounded-full">
@@ -54,7 +87,7 @@ export default function MyProfile() {
           </div>
           <div>
             <div className="font-semibold text-lg">Bio </div>
-            <div>{user.bio === "" ? " - " : user.bio}</div>
+            <div>{user.bio === undefined ? ` - ` : `${user.bio}`}</div>
           </div>
         </div>
       </div>
@@ -72,16 +105,20 @@ export default function MyProfile() {
           <div className="flex gap-[160px]">
             <div>
               <div className="font-semibold text-lg">Country</div>
-              <div>{user.country === "" ? " - " : user.country}</div>
+              <div>
+                {user.country === undefined ? ` - ` : `${user.country}`}
+              </div>
             </div>
             <div>
               <div className="font-semibold text-lg">City/State</div>
-              <div>{user.city === "" ? " - " : user.city}</div>
+              <div>{user.city === undefined ? ` - ` : `${user.city}`}</div>
             </div>
           </div>
           <div>
             <div className="font-semibold text-lg">Postal Code</div>
-            <div>{user.postalCode === "" ? " - " : user.postalCode}</div>
+            <div>
+              {user.postalCode === undefined ? ` - ` : `${user.postalCode}`}
+            </div>
           </div>
         </div>
       </div>

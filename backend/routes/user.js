@@ -20,9 +20,22 @@ router.post("/signin", async (req, res) => {
       return res.status(401).json({ message: "Incorrect Password" });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, secretKey, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      {
+        id: user._id,
+        fullName: user.fullName,
+        mobile: user.mobile,
+        bio: user.bio,
+        country: user.country,
+        city: user.city,
+        postalCode: user.postalCode,
+        email: user.email,
+      },
+      secretKey,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     return res.status(200).json({
       message: "Sign In successfully",
@@ -54,6 +67,7 @@ router.post("/signup", async (req, res) => {
 });
 
 const verifyToken = (req, res, next) => {
+  console.log(req.headers);
   const token = req.headers.authorization?.split(" ")[1];
   console.log(token);
 

@@ -1,15 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { MyContext } from "./MyContext";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { user, setUser } = useContext(MyContext);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -20,9 +18,8 @@ export default function SignIn() {
       });
       console.log(data);
       toast.success(data.message);
-      const user = data.user;
-      navigate("/menu/dashboard", { state: { user } });
-      setUser(data.user);
+      navigate("/menu/dashboard");
+      localStorage.setItem("token", data.token);
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message); // Access message from error response
@@ -31,7 +28,6 @@ export default function SignIn() {
       }
     }
   };
-
 
   return (
     <div className="flex">
