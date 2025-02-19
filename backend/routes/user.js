@@ -11,7 +11,7 @@ router.post("/signin", async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    
+
     if (!user) {
       return res.status(401).json({ message: "User Not Found" });
     }
@@ -67,7 +67,6 @@ router.post("/signup", async (req, res) => {
 });
 
 const verifyToken = (req, res, next) => {
-  console.log(req.headers);
   const token = req.headers.authorization?.split(" ")[1];
   console.log(token);
 
