@@ -30,6 +30,7 @@ router.post("/signin", async (req, res) => {
         city: user.city,
         postalCode: user.postalCode,
         email: user.email,
+        profilePic: user.profilePic,
       },
       secretKey,
       {

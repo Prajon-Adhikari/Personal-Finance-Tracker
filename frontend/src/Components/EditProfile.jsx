@@ -14,6 +14,8 @@ export default function EditProfile() {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
+  const [preview, setPreview] = useState(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -39,6 +41,11 @@ export default function EditProfile() {
           setCountry(data.user.country || "");
           setCity(data.user.city || "");
           setPostalCode(data.user.postalCode || "");
+
+          const imagePath = data.user.profilePic
+            ? `http://localhost:8000/uploads/${data.user.profilePic}`
+            : "";
+          setPreview(imagePath);
         } else {
           console.error("Failed to fetch user data");
         }
@@ -55,25 +62,36 @@ export default function EditProfile() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
+      const formData = new FormData();
+      formData.append("fullName", fullName);
+      formData.append("email", email);
+      formData.append("mobile", mobile);
+      formData.append("bio", bio);
+      formData.append("country", country);
+      formData.append("city", city);
+      formData.append("postalCode", postalCode);
+      if (profilePic) formData.append("image", profilePic);
+
       const { data } = await axios.post(
         "http://localhost:8000/menu/setting/myprofile/edit",
-        {
-          fullName,
-          email,
-          mobile,
-          bio,
-          country,
-          city,
-          postalCode,
-        },
+        formData,
         {
           headers: { Authorization: `Bearer ${token}` },
+          "Content-Type": "multipart/form-data",
         }
       );
       toast.success(data.message);
       navigate("/menu/setting/myprofile");
     } catch (error) {
       toast.error(error.response.data.message);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePic(file);
+      setPreview(URL.createObjectURL(file));
     }
   };
 
@@ -93,6 +111,7 @@ export default function EditProfile() {
             method="POST"
             onSubmit={handleUpdate}
             className="bg-white rounded-xl mt-6 min-h-[100vh] "
+            enctype="multipart/form-data"
           >
             <div className="border-slate-300 border-b-2 ">
               <div className="text-gray-800 text-3xl pt-6  mx-[100px] text-center ">
@@ -111,15 +130,32 @@ export default function EditProfile() {
               <input
                 type="submit"
                 value="Save Changes"
-                className="bg-customTeal3 text-white rounded-lg px-6 py-2 text-xl"
+                className="bg-customTeal3 cursor-pointer text-white rounded-lg px-6 py-2 text-xl"
               />
             </div>
             <div className="text-center mt-12">
-              <FontAwesomeIcon
-                className="bg-slate-200 text-gray-500 cursor-pointer px-[60px] py-[51px] mb-10 text-[120px] rounded-full "
-                icon={faUser}
-              />{" "}
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="Profile Preview"
+                  className="w-[260px] h-[260px] rounded-full object-cover mx-auto mb-10"
+                />
+              ) : (
+                <FontAwesomeIcon
+                  className="bg-slate-200 text-gray-500 cursor-pointer px-[60px] py-[51px] mb-10 text-[120px] rounded-full"
+                  icon={faUser}
+                />
+              )}
+              <div className="flex pl-[200px]">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className=""
+                />
+              </div>
             </div>
+
             <div className="mx-[180px] text-3xl text-customBlue1 mt-10">
               Update your Personal Information
             </div>
@@ -170,6 +206,7 @@ export default function EditProfile() {
                     name="email"
                     autoComplete="true"
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled
                   />
                 </div>
                 <div className="flex flex-col gap-1">

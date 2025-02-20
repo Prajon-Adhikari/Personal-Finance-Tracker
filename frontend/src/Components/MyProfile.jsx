@@ -44,11 +44,20 @@ export default function MyProfile() {
     <div className="w-full">
       <div className="font-bold text-2xl ml-2">My Profile</div>
       <div className="flex border-2 shadow-[0px_0px_6px] shadow-slate-300 border-slate-300 rounded-lg justify-between py-4 px-8 my-6 mr-4 items-center">
-        <div className="flex items-center gap-4">
-          <FontAwesomeIcon
-            icon={faUser}
-            className="border-2 text-[60px] px-7 py-6 rounded-full border-slate-300 bg-gray-300 text-gray-500"
-          />
+        <div className="flex items-center gap-8">
+          {user.profilePic ? (
+            <>
+              <img
+                src={`http://localhost:8000/uploads/${user.profilePic}`}
+                className="w-[120px] h-[120px] rounded-full object-cover"
+              />
+            </>
+          ) : (
+            <FontAwesomeIcon
+              icon={faUser}
+              className="border-2 text-[60px] px-7 py-6 rounded-full border-slate-300 bg-gray-300 text-gray-500"
+            />
+          )}
           <div>
             <div className="font-bold text-2xl">{user.fullName}</div>
             <div>{user.bio === undefined ? ` - ` : `${user.bio}`}</div>
@@ -56,8 +65,10 @@ export default function MyProfile() {
           </div>
         </div>
         <div className="flex gap-2 items-center border-slate-300 text-xl border-2  px-6 py-2 rounded-full">
-          <div>Edit</div>
-          <FontAwesomeIcon icon={faPen} />
+          <Link to="edit">
+            <button className="pr-2">Edit</button>
+            <FontAwesomeIcon icon={faPen} />
+          </Link>
         </div>
       </div>
       <div className="border-2 shadow-[0px_0px_6px] shadow-slate-300 border-slate-300 rounded-lg px-10 py-6 mr-4">

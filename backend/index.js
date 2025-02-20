@@ -5,6 +5,7 @@ const transactionRoute = require("./routes/transactions.js");
 const reportRoute = require("./routes/reports.js");
 const dashboardRoute = require("./routes/dashboard.js");
 const settingRoute = require("./routes/setting.js");
+const path = require("path");
 const mongoose = require("mongoose");
 
 const PORT = 8000;
@@ -22,6 +23,7 @@ app.use(
   })
 );
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

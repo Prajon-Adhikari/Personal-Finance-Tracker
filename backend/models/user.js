@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
       type: Number,
     },
     profilePic: {
-      type: Buffer,
+      type: String,
     },
   },
   { timestamps: true }
