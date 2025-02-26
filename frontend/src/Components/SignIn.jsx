@@ -10,8 +10,6 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [showInvalidUserMsg, setShowInvalidUserMsg] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [forgetPass, setForgetPass] = useState(false);
-  const [yourEmail, setYourEmail] = useState("");
 
   const navigate = useNavigate();
 
@@ -101,12 +99,12 @@ export default function SignIn() {
                 )}
               </span>
             </div>
-            <div
+            {/* <Link
+              to="/user/forgetpassword"
               className="text-right mt-3 mr-8 text-blue-600 cursor-pointer"
-              onClick={() => setForgetPass(true)}
             >
               Forget Password ?
-            </div>
+            </Link> */}
           </div>
           {showInvalidUserMsg ? (
             <div className="text-red-500 pl-3 text-md">
@@ -128,27 +126,6 @@ export default function SignIn() {
           </div>
         </div>
       </form>
-      {forgetPass ? (
-        <form className="fixed top-[300px] left-[600px] bg-green-400 px-8 py-[40px] flex flex-col">
-          <label htmlFor="yourEmail" className="text-2xl text-gray-700">
-            Enter your email address
-          </label>
-          <input
-            type="email"
-            className="w-[300px] py-1 pl-4 text-xl mt-1 rounded-md"
-            id="yourEmail"
-            value={yourEmail}
-            placeholder="Enter your email"
-            onChange={(e) => setYourEmail(e.target.value)}
-          />
-          <input
-            type="submit"
-            className="border-2 mt-6 w-[100px] cursor-pointer py-1"
-          />
-        </form>
-      ) : (
-        <div></div>
-      )}
     </div>
   );
 }

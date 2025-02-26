@@ -90,11 +90,12 @@ export default function Transactions() {
   return (
     <>
       <div className="bg-white flex rounded-bl-xl justify-between items-center px-10 w-full h-[70px]">
-        <h2 className="text-2xl font-bold">TRANSACTIONS</h2>
-<FontAwesomeIcon
+        <h2 className="text-2xl  text-slate-600 font-bold">TRANSACTIONS</h2>
+        <FontAwesomeIcon
           className="bg-slate-200 text-gray-500 cursor-pointer px-[12px] py-[10px] mr-4 text-xl rounded-full "
           icon={faUser}
-        />      </div>
+        />{" "}
+      </div>
 
       <div className="flex gap-10 mx-10 my-6 items-center">
         <fieldset className="border-2 border-gray-500 rounded-xl">

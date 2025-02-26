@@ -299,7 +299,7 @@ export default function Reports() {
           HealthData[weekIndex] += amount;
         } else if (item.category === "Charity") {
           CharityData[weekIndex] += amount;
-        } else if (item.category === "Other") {
+        } else if (item.category === "Other Expense") {
           OtherData[weekIndex] += amount;
         } else if (item.category === "Electricity") {
           ElectricityData[weekIndex] += amount;
@@ -382,7 +382,7 @@ export default function Reports() {
           HealthData += amount;
         } else if (item.category === "Charity") {
           CharityData += amount;
-        } else if (item.category === "Other") {
+        } else if (item.category === "Other Expense") {
           OtherData += amount;
         } else if (item.category === "Electricity") {
           ElectricityData += amount;
@@ -458,7 +458,7 @@ export default function Reports() {
           HealthData += amount;
         } else if (item.category === "Charity") {
           CharityData += amount;
-        } else if (item.category === "Other") {
+        } else if (item.category === "Other Expense") {
           OtherData += amount;
         } else if (item.category === "Electricity") {
           ElectricityData += amount;
@@ -503,7 +503,7 @@ export default function Reports() {
           prevHealthData += prevAmount;
         } else if (item.category === "Charity") {
           prevCharityData += prevAmount;
-        } else if (item.category === "Other") {
+        } else if (item.category === "Other Expense") {
           prevOtherData += prevAmount;
         } else if (item.category === "Electricity") {
           prevElectricityData += prevAmount;
@@ -548,7 +548,7 @@ export default function Reports() {
   return (
     <>
       <div className="bg-white flex rounded-bl-xl justify-between items-center px-10 w-full h-[70px]">
-        <h2 className="text-2xl font-bold">REPORTS</h2>
+        <h2 className="text-2xl  text-slate-600 font-bold">REPORTS</h2>
         <FontAwesomeIcon
           className="bg-slate-200 text-gray-500 cursor-pointer px-[12px] py-[10px] mr-4 text-xl rounded-full "
           icon={faUser}

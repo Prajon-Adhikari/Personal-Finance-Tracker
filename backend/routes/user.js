@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../models/user.js");
 const jwt = require("jsonwebtoken");
+// const nodemailer = require("nodemailer");
 
 const router = express.Router();
 
@@ -66,6 +67,28 @@ router.post("/signup", async (req, res) => {
     return res.status(500).json({ message: "Unsuccessfull Registration" });
   }
 });
+
+// router.post("/forgetpassword", async (req, res) => {
+//   const { email } = req.body;
+//   try {
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(400).json({ message: "User not found" });
+//     }
+
+//     console.log(user);
+
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       secure: true,
+//       auth: {
+//         user: "",
+//         pass: "",
+//       },
+//     });
+//   } catch (error) {}
+// });
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];

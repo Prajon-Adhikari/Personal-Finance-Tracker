@@ -14,12 +14,14 @@ import Notifications from "./Components/Notifications";
 import DataExport from "./Components/DataExport";
 import DeleteAccount from "./Components/DeleteAccount";
 import EditProfile from "./Components/EditProfile";
+// import ForgetPass from "./Components/ForgetPass";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/user/signin" />} />
+        {/* <Route path="/user/forgetpassword" element={<ForgetPass />} /> */}
         <Route path="/user/signup" element={<SignUp />} />
         <Route path="/user/signin" element={<SignIn />} />
         <Route path="/menu" element={<Menu />}>
