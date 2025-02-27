@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/user.js");
 const jwt = require("jsonwebtoken");
 // const nodemailer = require("nodemailer");
+const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
@@ -17,7 +18,9 @@ router.post("/signin", async (req, res) => {
       return res.status(401).json({ message: "User Not Found" });
     }
 
-    if (user.password !== password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({ message: "Incorrect Password" });
     }
 
@@ -52,10 +55,13 @@ router.post("/signin", async (req, res) => {
 router.post("/signup", async (req, res) => {
   const { fullName, email, password, mobile } = req.body;
   try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    
     const user = await User.create({
       fullName,
       email,
-      password,
+      password: hashedPassword,
       mobile,
     });
     console.log(user);
