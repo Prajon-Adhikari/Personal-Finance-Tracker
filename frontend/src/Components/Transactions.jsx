@@ -12,6 +12,9 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
 
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [showEdit, setShowEdit] = useState(false);
+
   const [type, setType] = useState("");
   const [showCategory, setShowCategory] = useState("");
   const [showAddTransactions, setShowAddTransactions] = useState(false);
@@ -254,7 +257,13 @@ export default function Transactions() {
                   </div>
                 </td>
                 <td className="py-3 border flex gap-3 justify-center  ">
-                  <div className="bg-blue-400 text-white py-1 px-2 rounded cursor-pointer">
+                  <div
+                    className="bg-blue-400 text-white py-1 px-2 rounded cursor-pointer"
+                    onClick={() => {
+                      setSelectedTransaction(transaction);
+                      setShowEdit(true);
+                    }}
+                  >
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </div>
                   <div className="bg-red-400 text-white py-1 px-2 rounded cursor-pointer">
@@ -272,6 +281,16 @@ export default function Transactions() {
             <AddTransactions month={selectedMonth} />
           </MyContext.Provider>
         </div>
+      ) : (
+        ""
+      )}
+      {showEdit ? (
+        <EditTransactions
+          transaction={selectedTransaction}
+          selectedMonth={selectedMonth}
+          onClose={() => setShowEdit(false)}
+          onSave={() => fetchTransactionData(selectedMonth)}
+        />
       ) : (
         ""
       )}

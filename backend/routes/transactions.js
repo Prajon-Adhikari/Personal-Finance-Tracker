@@ -1,5 +1,6 @@
 const express = require("express");
 const Transaction = require("../models/transactions.js");
+const mongoose = require("mongoose");
 
 const router = express.Router();
 
@@ -42,6 +43,28 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Transactions unsuccessful" });
+  }
+});
+
+router.put("/:yearMonth/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const objectId = new mongoose.Types.ObjectId(id);
+
+    const updatedTransaction = await Transaction.findByIdAndUpdate(
+      objectId,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedTransaction) {
+      return res.status(404).json({ message: "Transaction Not Found" });
+    }
+
+    res.status(200).json({ message: "Transaction Updated Successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating transaction : ", error });
   }
 });
 
