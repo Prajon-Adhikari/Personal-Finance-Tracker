@@ -68,4 +68,27 @@ router.put("/:yearMonth/:id", async (req, res) => {
   }
 });
 
+router.delete("/:yearMonth/:id", async (req, res) => {
+  try {
+    const { yearMonth, id } = req.params;
+
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: "Transaction Id should be provided" });
+    }
+
+    const deletedTransaction = await Transaction.findByIdAndDelete(id);
+
+    if (!deletedTransaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    res.status(200).json({ message: "Transaction deleted successfully" });
+  } catch (error) {
+    console.log("Error deleting transactions : ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 module.exports = router;

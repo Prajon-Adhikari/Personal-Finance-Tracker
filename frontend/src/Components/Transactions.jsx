@@ -7,6 +7,7 @@ import AddTransactions from "./AddTransactions";
 import { MyContext } from "./MyContext";
 import { useNavigate } from "react-router-dom";
 import EditTransactions from "./EditTransactions";
+import DeleteTransactions from "./DeleteTransactions";
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -14,6 +15,7 @@ export default function Transactions() {
 
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   const [type, setType] = useState("");
   const [showCategory, setShowCategory] = useState("");
@@ -266,7 +268,13 @@ export default function Transactions() {
                   >
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </div>
-                  <div className="bg-red-400 text-white py-1 px-2 rounded cursor-pointer">
+                  <div
+                    className="bg-red-400 text-white py-1 px-2 rounded cursor-pointer"
+                    onClick={() => {
+                      setSelectedTransaction(transaction);
+                      setShowDelete(true);
+                    }}
+                  >
                     <FontAwesomeIcon icon={faTrash} />
                   </div>
                 </td>
@@ -289,6 +297,16 @@ export default function Transactions() {
           transaction={selectedTransaction}
           selectedMonth={selectedMonth}
           onClose={() => setShowEdit(false)}
+          onSave={() => fetchTransactionData(selectedMonth)}
+        />
+      ) : (
+        ""
+      )}
+      {showDelete ? (
+        <DeleteTransactions
+          transaction={selectedTransaction}
+          selectedMonth={selectedMonth}
+          onClose={() => setShowDelete(false)}
           onSave={() => fetchTransactionData(selectedMonth)}
         />
       ) : (
