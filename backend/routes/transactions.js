@@ -36,7 +36,6 @@ router.post("/", async (req, res) => {
       bill,
       date,
     });
-    console.log(transaction);
     return res
       .status(200)
       .json({ message: "Transactions submitted successfully" });
@@ -49,7 +48,6 @@ router.post("/", async (req, res) => {
 router.put("/:yearMonth/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const objectId = new mongoose.Types.ObjectId(id);
 
     const updatedTransaction = await Transaction.findByIdAndUpdate(

@@ -52,8 +52,6 @@ router.post(
       if (postalCode) updateFields.postalCode = postalCode;
       if (req.file) updateFields.profilePic = `${req.file.filename}`;
 
-      console.log(updateFields);
-      console.log(req.user);
 
       const updatedUser = await User.findOneAndUpdate(
         { email: req.user.email },
@@ -67,7 +65,6 @@ router.post(
         return res.status(404).json({ message: "User not found" });
       }
 
-      console.log(updatedUser);
       return res
         .status(200)
         .json({ message: "Updated successfully", user: updatedUser });

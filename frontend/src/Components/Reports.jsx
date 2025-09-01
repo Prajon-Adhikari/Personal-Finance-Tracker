@@ -585,9 +585,9 @@ export default function Reports() {
               {" "}
               Net Balance : ${totalIncome - totalExpense}
             </div>
-            <div className="py-4 font-medium text-lg">
+            <div className="py-4 font-medium">
               Highest Spending Category :
-              <span className="px-3 py-2 bg-red-500 rounded-lg text-white ml-8">
+              <span className="px-3 py-2 bg-red-500 rounded-lg text-white ml-2">
                 {highestExpenseCategory}
               </span>
             </div>
